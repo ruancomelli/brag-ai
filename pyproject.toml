@@ -1,7 +1,24 @@
 [project]
-name = "brag-ai"
+name = "brag"
 version = "0.1.0"
 description = "Generate and maintain a brag document automatically from your GitHub contributions, powered by AI."
 readme = "README.md"
+authors = [{ name = "Ruan Comelli", email = "ruancomelli@gmail.com" }]
 requires-python = ">=3.12"
-dependencies = ["typer>=0.15.1"]
+dependencies = [
+    "langchain-core>=0.3.37",
+    "langchain-text-splitters>=0.3.6",
+    "langgraph>=0.2.74",
+    "loguru>=0.7.3",
+    "pydantic>=2.10.6",
+    "pygithub>=2.6.0",
+    "rich>=13.9.4",
+    "typer>=0.15.1",
+]
+
+[project.scripts]
+brag = "brag.__main__:app"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
