@@ -1,0 +1,7 @@
+[project]
+name = "brag-ai"
+version = "0.1.0"
+description = "Generate and maintain a brag document automatically from your GitHub contributions, powered by AI."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = ["typer>=0.15.1"]
