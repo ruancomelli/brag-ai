@@ -1,23 +1,21 @@
-# Brag AI
+# 💁 Brag AI
 
 Generate and maintain a brag document automatically from your GitHub contributions, powered by AI.
 
 ## Overview
 
-Brag AI helps you create and maintain a "brag document" - a record of your professional achievements and contributions. It analyzes your GitHub activity and generates meaningful descriptions of your work that you can use for performance reviews, job applications, or personal development tracking.
+Brag AI helps you create and maintain a "brag document" - a record of your professional achievements and contributions. It analyzes your GitHub activity and generates meaningful descriptions of your work that you can use for performance reviews, job applications, personal development tracking, or impressing your friends.
 
 ## Features
 
-- **GitHub Integration**: Automatically analyzes your commits to generate achievement descriptions
-- **AI-Powered**: Converts technical contributions into clear, impactful statements
-- **CLI Tool**: Easy to use command-line interface
-- **Customizable Output**: Generate documents in various formats
-- **Local Processing**: Your data stays on your machine
+- 🔍 **GitHub Integration**: Automatically analyzes your commits to generate achievement descriptions
+- 🤖 **AI-Powered**: Converts technical contributions into clear, impactful statements
+- 💻 **CLI Tool**: Easy to use command-line interface
 
 ## Installation
 
 ```console
-
+pip install brag-ai
 ```
 
 ## Usage
@@ -70,6 +68,7 @@ The brag document is a JSON object with the following structure:
 - **Integration with other tools**: Support for other tools like GitLab, Bitbucket etc.
 - **Custom Templates**: Create your own formats for brag documents
 - **Export Options**: Additional export formats
+- **Local Processing**: Your data stays on your machine if you use local LLMs
 
 ## Contributing
 
@@ -82,8 +81,6 @@ Contributions are welcome! Please check out our [Contributing Guide](CONTRIBUTIN
 This project is currently private.
 
 ## Support
-
-<!-- TODO: add docs -->
 
 - 📖 [Documentation](https://github.com/ruancomelli/brag-ai/blob/main/README.md)
 - 🐛 [Issue Tracker](https://github.com/ruancomelli/brag-ai/issues)
