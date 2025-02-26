@@ -1,3 +1,9 @@
+"""This module defines classes and functions for fetching and formatting Github commits.
+
+It provides functionality to:
+- Fetch commits from a Github repository for a specific user.
+- Format commit information into a context string suitable for generating brag documents.
+"""
 from collections.abc import Iterator
 from dataclasses import dataclass
 from datetime import datetime
@@ -60,7 +66,17 @@ class GithubCommits:
 
 
 def format_commit_as_context(commit: Commit) -> str:
-    """Format a Github commit as a context string."""
+    """Format a Github commit as a context string.
+
+    This function takes a Github commit object and formats it into a string
+    that includes the commit message and the diffs of the files changed in the commit.
+
+    Args:
+        commit: The Github commit object to format.
+
+    Returns:
+        A string containing the commit message and file diffs.
+    """
     return "\n\n".join(
         (
             commit.commit.message.strip(),
