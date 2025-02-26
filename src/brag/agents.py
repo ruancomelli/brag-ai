@@ -3,9 +3,6 @@
 from collections.abc import Iterable, Iterator
 from typing import TypeVar
 
-from langchain.chains.llm import LLMChain
-from langchain.prompts import PromptTemplate
-from langchain.schema.output_parser import StrOutputParser
 from pydantic_ai import Agent
 from pydantic_ai.models import KnownModelName
 
@@ -84,16 +81,15 @@ async def _generate_initial_brag_document(
 
 
 async def _update_brag_document(agent: Agent, brag_document: str, chunk: str) -> str:
-    """Refine a summary with a new document."""
+    """Refine a summary with a new document using pydantic-ai."""
     refine_template = compose_text(
         """
-            Produce a final brag document.
+            Produce a refined brag document.
 
             Existing brag document up to this point:
             <brag_document>
             {brag_document}
             </brag_document>
-
             New context:
             <context>
             {context}
@@ -102,9 +98,8 @@ async def _update_brag_document(agent: Agent, brag_document: str, chunk: str) ->
             Given the new context, refine the original brag document.
         """
     )
-    prompt = PromptTemplate.from_template(refine_template)
-    chain = LLMChain(llm=agent.llm, prompt=prompt, output_parser=StrOutputParser())
-    return await chain.arun(brag_document=brag_document, context=chunk)
+
+    return await agent.run(refine_template, brag_document=brag_document, context=chunk)
 
 
 def _head_and_tail(iterable: Iterable[_T]) -> tuple[_T, Iterator[_T]]:
