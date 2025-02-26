@@ -3,14 +3,13 @@
 from collections.abc import Iterable, Iterator
 from typing import TypeVar
 
-from pydantic_ai import Agent
-from pydantic_ai.models import KnownModelName
 from langchain.chains.llm import LLMChain
 from langchain.prompts import PromptTemplate
 from langchain.schema.output_parser import StrOutputParser
+from pydantic_ai import Agent
+from pydantic_ai.models import KnownModelName
 
-from brag.documents import Document
-from brag.text_formatters import dedent_triple_quote_string, compose_text
+from brag.text_formatters import compose_text, dedent_triple_quote_string
 
 _T = TypeVar("_T")
 
@@ -84,9 +83,7 @@ async def _generate_initial_brag_document(
     return await chain.arun(context=chunk)
 
 
-async def _update_brag_document(
-    agent: Agent, brag_document: str, chunk: str
-) -> str:
+async def _update_brag_document(agent: Agent, brag_document: str, chunk: str) -> str:
     """Refine a summary with a new document."""
     refine_template = compose_text(
         """
