@@ -1,19 +1,28 @@
+"""This module defines the command-line interface for the brag application.
+
+It uses Typer to create a CLI that allows users to generate brag documents
+from their GitHub contributions.
+"""
+
 from __future__ import annotations
 
-import enum
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Annotated, Self
+from typing import Annotated
+from typing import get_args as get_literal_type_args
 
+import click
 from github import Github
 from github.Auth import Token
 from loguru import logger
-from pydantic import BaseModel
-from rich.console import Console
+from pydantic_ai.models import KnownModelName
 from typer import Argument, BadParameter, Option, Typer
 
-from brag.github_commit_loader import GithubCommitLoader
+from brag.agents import generate_brag_document
+from brag.asyncio import run_with_asyncio
+from brag.github_commits import GithubCommits, format_commit_as_context
+from brag.repository import RepoReference
 
 app = Typer(
     rich_markup_mode="rich",
@@ -25,36 +34,15 @@ app = Typer(
 )
 
 
-class RepoArgument(BaseModel):
-    owner: str
-    name: str
-
-    @property
-    def full_name(self) -> str:
-        return f"{self.owner}/{self.name}"
-
-    @classmethod
-    def parse(cls, value: str) -> Self:
-        owner, name = value.split("/")
-        return cls(owner=owner, name=name)
-
-
-class OutputFormat(enum.StrEnum):
-    MARKDOWN = enum.auto()
-
-    @classmethod
-    def default(cls) -> OutputFormat:
-        return OutputFormat.MARKDOWN
-
-
 @app.command()
-def from_repo(
+@run_with_asyncio
+async def from_repo(
     repo: Annotated[
-        RepoArgument,
+        RepoReference,
         Argument(
             help="The repository to generate the brag document for. Format: `owner/repo`",
             rich_help_panel="Inputs",
-            parser=RepoArgument.parse,
+            parser=RepoReference.from_repo_full_name,
         ),
     ],
     user_login: Annotated[
@@ -72,6 +60,7 @@ def from_repo(
     from_date: Annotated[
         datetime | None,
         Option(
+            "--from",
             help="The start date to generate the brag document for",
             rich_help_panel="Inputs",
         ),
@@ -79,6 +68,7 @@ def from_repo(
     to_date: Annotated[
         datetime | None,
         Option(
+            "--to",
             help="The end date to generate the brag document for",
             rich_help_panel="Inputs",
         ),
@@ -90,9 +80,10 @@ def from_repo(
             rich_help_panel="Inputs",
         ),
     ] = None,
-    token: Annotated[
+    github_api_token: Annotated[
         str | None,
         Option(
+            "--token",
             help=(
                 "The GitHub token to use to fetch information from GitHub."
                 " If not provided, the brag document will only include public information."
@@ -101,13 +92,6 @@ def from_repo(
             rich_help_panel="Inputs",
         ),
     ] = None,
-    format: Annotated[
-        OutputFormat,
-        Option(
-            help="The format to generate the brag document in",
-            rich_help_panel="Outputs",
-        ),
-    ] = OutputFormat.default(),
     output: Annotated[
         Path | None,
         Option(
@@ -125,41 +109,74 @@ def from_repo(
             rich_help_panel="Outputs",
         ),
     ] = False,
+    model_name: Annotated[
+        KnownModelName,
+        Option(
+            "--model",
+            help="The name of the model to use for generating the brag document.",
+            rich_help_panel="Model",
+            # Workaround since `typer` does not currently support `Literal` types
+            # See https://github.com/fastapi/typer/pull/429#issuecomment-2491043848
+            click_type=click.Choice(get_literal_type_args(KnownModelName)),
+        ),
+    ] = (
+        # TODO: experiment with other models to pick the best default
+        "google-vertex:gemini-2.0-flash"
+    ),
+    language: Annotated[
+        str,
+        Option(
+            "--language",
+            help="The language to use for generating the brag document.",
+            rich_help_panel="Model",
+        ),
+    ] = "english",
 ) -> None:
+    """Generates a brag document from a GitHub repository.
+
+    This command fetches commits from a specified GitHub repository for a given user,
+    and then uses an AI model to generate a brag document summarizing those contributions.
+    """
     if output is not None and output.exists() and not overwrite:
         raise FileExistsError(
             f"Output file `{output}` already exists. Use `--overwrite` to overwrite."
         )
 
-    if not user_login and not token:
+    if not user_login and not github_api_token:
         raise BadParameter("Either `user` or `github_api_token` must be provided")
 
-    with Github(auth=Token(token) if token else None) as g:
+    logger.info(
+        (
+            "Generating brag document from {repo_full_name} for {user_login}"
+            "{from_date}{to_date}"
+        ),
+        repo_full_name=repo.full_name,
+        user_login=user_login,
+        from_date=f" from {from_date}" if from_date else "",
+        to_date=f" to {to_date}" if to_date else "",
+    )
+
+    with Github(auth=Token(github_api_token) if github_api_token else None) as g:
         if not user_login:
             user_login = g.get_user().login
 
-        loader = GithubCommitLoader(
+        commits = GithubCommits.from_github(
             github=g,
             user=user_login,
-            repo_owner=repo.owner,
-            repo_name=repo.name,
+            repo=repo,
             from_date=from_date,
             to_date=to_date,
             limit=limit,
         )
 
-        documents = loader.load()
+        context_chunks = map(format_commit_as_context, commits)
 
-        # Open the output file if specified, otherwise use stdout
-        with open(output, "w") if output else sys.stdout as f:
-            console = Console(file=f)
+        brag_document = await generate_brag_document(
+            model_name,
+            context_chunks,
+            language=language,
+        )
 
-            logger.info(
-                "Generating brag document for {user_login} from {from_date} to {to_date} in {format} format",
-                user_login=user_login,
-                from_date=from_date,
-                to_date=to_date,
-                format=format,
-            )
-
-            console.print(documents)
+    # Open the output file if specified, otherwise use stdout
+    with open(output, "w") if output else sys.stdout as f:
+        f.write(brag_document)

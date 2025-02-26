@@ -4,6 +4,9 @@ It provides functionality to:
 - Fetch commits from a Github repository for a specific user.
 - Format commit information into a context string suitable for generating brag documents.
 """
+
+from __future__ import annotations
+
 from collections.abc import Iterator
 from dataclasses import dataclass
 from datetime import datetime
@@ -20,7 +23,14 @@ from brag.repository import RepoReference
 
 @dataclass(frozen=True, slots=True)
 class GithubCommits:
-    """A class to fetch Github commits."""
+    """A class to fetch Github commits from a repository for a specific user.
+
+    Attributes:
+        _commits: A paginated list of Commit objects.
+        repo: A RepoReference object representing the repository.
+        user: The username of the author whose commits are being fetched.
+        limit: The maximum number of commits to fetch. If None, all commits are fetched.
+    """
 
     _commits: PaginatedList[Commit]
     repo: RepoReference
@@ -36,8 +46,20 @@ class GithubCommits:
         from_date: datetime | None = None,
         to_date: datetime | None = None,
         limit: int | None = None,
-    ) -> "GithubCommits":
-        """Create a GithubCommits instance from the Github API."""
+    ) -> GithubCommits:
+        """Create a GithubCommits instance from the Github API.
+
+        Args:
+            github: A Github API client instance.
+            repo: A RepoReference object representing the repository.
+            user: The username of the author whose commits are being fetched.
+            from_date: An optional datetime object representing the start date for fetching commits.
+            to_date: An optional datetime object representing the end date for fetching commits.
+            limit: An optional integer representing the maximum number of commits to fetch.
+
+        Returns:
+            A GithubCommits instance.
+        """
         repo = github.get_repo(repo.full_name)
         commits = repo.get_commits(
             author=user,
