@@ -5,9 +5,12 @@ from typing import TypeVar
 
 from pydantic_ai import Agent
 from pydantic_ai.models import KnownModelName
+from langchain.chains.llm import LLMChain
+from langchain.prompts import PromptTemplate
+from langchain.schema.output_parser import StrOutputParser
 
 from brag.documents import Document
-from brag.text_formatters import dedent_triple_quote_string
+from brag.text_formatters import dedent_triple_quote_string, compose_text
 
 _T = TypeVar("_T")
 
@@ -75,46 +78,36 @@ async def _generate_initial_brag_document(
     chunk: str,
 ) -> str:
     """Generate an initial version of the brag document."""
-    prompt = PromptTemplate("Write a concise summary of the following: {context}")
-    initial_summary_agent = Agent(
-        llm=llm,
-        prompt=prompt,
-        output_parser=StringOutputParser(),
-    )
-    return await initial_summary_agent.run(context=document.page_content)
+    prompt_template = "Write a concise summary of the following: {context}"
+    prompt = PromptTemplate.from_template(prompt_template)
+    chain = LLMChain(llm=agent.llm, prompt=prompt, output_parser=StrOutputParser())
+    return await chain.arun(context=chunk)
 
 
 async def _update_brag_document(
-    llm: OpenAIModel, summary: str, document: Document
+    agent: Agent, brag_document: str, chunk: str
 ) -> str:
     """Refine a summary with a new document."""
     refine_template = compose_text(
         """
-            Produce a final summary.
+            Produce a final brag document.
 
-            Existing summary up to this point:
-            <summary>
-            {existing_answer}
-            </summary>
+            Existing brag document up to this point:
+            <brag_document>
+            {brag_document}
+            </brag_document>
 
             New context:
             <context>
             {context}
             </context>
 
-            Given the new context, refine the original summary.
+            Given the new context, refine the original brag document.
         """
     )
-    prompt = PromptTemplate(refine_template)
-    refine_summary_agent = Agent(
-        llm=llm,
-        prompt=prompt,
-        output_parser=StringOutputParser(),
-    )
-    return await refine_summary_agent.run(
-        existing_answer=summary,
-        context=document.page_content,
-    )
+    prompt = PromptTemplate.from_template(refine_template)
+    chain = LLMChain(llm=agent.llm, prompt=prompt, output_parser=StrOutputParser())
+    return await chain.arun(brag_document=brag_document, context=chunk)
 
 
 def _head_and_tail(iterable: Iterable[_T]) -> tuple[_T, Iterator[_T]]:
