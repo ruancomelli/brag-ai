@@ -31,46 +31,45 @@ pip install brag-ai
 
 ## Usage
 
-### Basic Usage
-
-Let's make you look good! Generate a brag document from your recent GitHub activity:
+### Generate a brag document from a GitHub repository
 
 ```console
-brag generate --user <github-username>
+brag owner/repo --user github-username
 ```
 
 ### Options
 
-#### Generate for a specific time period
+- `--user`: The GitHub username to generate the brag document for. If not provided, the owner of the GitHub API token will be used.
+- `--from`: The start date to generate the brag document for (format: YYYY-MM-DD).
+- `--to`: The end date to generate the brag document for (format: YYYY-MM-DD).
+- `--limit`: The maximum number of commits to include in the brag document.
+- `--github-api-token`: The GitHub API token to use for authentication. If not provided, only public information will be included.
+- `--output`: The path to save the generated brag document. If not specified, the document will be printed to stdout.
+- `--overwrite`: If set, overwrites the output file if it already exists.
+- `--model`: The name of the AI model to use for generating the brag document.
+- `--language`: The language to use for generating the brag document.
+
+### Example
 
 ```console
-brag generate --from 2024-01-01 --to 2024-03-31
-```
-
-#### Focus on specific repositories
-
-```console
-brag generate --repo repo1 --repo repo2
-```
-
-#### Export in different formats
-
-```console
-brag generate --format markdown
-brag generate --format json
-```
-
-The brag document is a JSON object with the following structure:
-
-<!-- TODO: Add JSON schema -->
-
-```json
-
+# Generate a brag document for the user `my-username` from their contributions
+# to `my-org/my-repo`
+brag my-org/my-repo --user my-username \
+  # only consider contributions from 2023-01-01 to 2023-12-31
+  --from 2023-01-01 --to 2023-12-31 \
+  # generate the brag document in Portuguese
+  --language Português \
+  # save the brag document to the file `brag.md`
+  --output brag.md
 ```
 
 ### Full API
 
-<!-- TODO: post the CLI `--help` menus here -->
+For more details, use the `--help` flag:
+
+```console
+brag --help
+```
 
 ## Coming Soon™ 🚀
 
