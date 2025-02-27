@@ -47,7 +47,7 @@ repos:
     entry: uv run ruff format
     types: [python]
 
-  - id: type-check
+  - id: typecheck
     name: Type check Python code
     stages: [pre-commit, pre-push]
     language: system
