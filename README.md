@@ -22,13 +22,22 @@ Perfect for:
 ## Features
 
 - 🔍 **GitHub Integration**: Automagically analyzes your commits to generate achievement descriptions
-- 🤖 **AI-Powered**: Turns "fix bug in login" into "Enhanced system reliability by resolving critical authentication issues"
+- 🤖 **AI-Powered**: Turns "fix: bug in login" into "Enhanced system reliability by resolving critical authentication issues"
 - 💻 **CLI Tool**: Easy to use command-line interface
 
 ## Installation
 
+This project is still not published to PyPI. You can install it from source using pip:
+
 ```console
-pip install brag-ai
+pip install git+https://github.com/ruancomelli/brag-ai.git
+```
+
+If you use [`uv`](https://docs.astral.sh/uv/), you can also run this tool using
+`uvx` tool calling:
+
+```console
+uvx --from git+https://github.com/ruancomelli/brag-ai brag --help # or any other command
 ```
 
 ## Usage
@@ -65,6 +74,27 @@ brag my-org/my-repo --user my-username \
   --output brag.md
 ```
 
+### Choosing different models
+
+Brag AI uses `pydantic-ai` under the hood, and hence supports [all models
+supported by them](https://ai.pydantic.dev/models/).
+
+A model can be picked by passing the `--model` argument when executing `brag`.
+Model API keys are provided by setting environment variables according to
+[`pydantic-ai`'s nomenclature](https://ai.pydantic.dev/models/):
+
+```console
+# Use OpenAI's GPT-4o
+export OPENAI_API_KEY=your-openai-api-key
+brag --model openai:gpt-4o owner/repo --user github-username
+# Use Anthropic's Claude
+export ANTHROPIC_API_KEY=your-anthropic-api-key
+brag --model anthropic:claude-3-5-sonnet-latest owner/repo --user github-username
+# Use Google's Gemini
+export GEMINI_API_KEY=your-gemini-api-key
+brag --model google-vertex:gemini-2.0-flash owner/repo --user github-username
+```
+
 ### Full API
 
 For more details, use the `--help` flag:
@@ -79,7 +109,7 @@ brag --help
 - 🤝 **Extended GitHub Integration**: Support for PR reviews, issues, and discussions
 - 🔄 **Integration with other tools**: GitLab, Bitbucket, and more - we don't discriminate!
 - 📝 **Custom Templates**: Make your brag document as unique as you are
-- 📦 **Export Options**: More ways to show off your achievements
+- 📦 **Export Options**: More ways to show off your achievements (JSON brag documents anyone?)
 - 🔒 **Local Processing**: Your precious data stays on your machine if you use local LLMs
 
 ## Contributing
@@ -97,6 +127,7 @@ This project is currently private (shhh... 🤫)
 - 📖 [Documentation](https://github.com/ruancomelli/brag-ai/blob/main/README.md)
 - 🐛 [Issue Tracker](https://github.com/ruancomelli/brag-ai/issues)
 - 💬 [Discussions](https://github.com/ruancomelli/brag-ai/discussions)
+- 💻 [Repository](https://github.com/ruancomelli/brag-ai)
 
 ## Why Brag AI?
 
