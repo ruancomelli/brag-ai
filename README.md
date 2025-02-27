@@ -1,21 +1,23 @@
 # 💁 Brag AI
 
-Because your awesome work deserves to be remembered! ✨
+[![Nox](https://img.shields.io/badge/%F0%9F%A6%8A-Nox-D85E00.svg)](https://github.com/wntrblm/nox)
 
 Generate and maintain a brag document automatically from your GitHub contributions, powered by AI.
 
+Because your awesome work deserves to be remembered! ✨
+
 ## Overview
 
-Ever had that moment when your manager asks "So, what have you been up to?" and your mind goes blank? 🤔
+Ever had that moment when your manager asks "So, what have you been up to?" and your mind goes blank?
 
-Brag AI is your personal achievement historian! It helps you create and maintain a "brag document" - a fancy record of all the cool stuff you've done. It dives into your GitHub activity and transforms those cryptic commit messages into beautiful, human-readable achievements that'll make your portfolio shine! ✨
+Brag AI is your personal achievement historian! It helps you create and maintain a "brag document" - a fancy record of all the cool stuff you've done. It dives into your GitHub activity and transforms those cryptic commit messages into beautiful, human-readable achievements that will make your portfolio shine! ✨
 
 Perfect for:
 
 - 📊 Performance reviews (without the last-minute panic)
 - 💼 Job applications (show off with style)
 - 📈 Personal development tracking (watch yourself grow!)
-- 🎉 Impressing your friends (and maybe your cat - results may vary)
+- 🎉 Impressing your friends (and maybe your pet - results may vary)
 
 ## Features
 

@@ -37,33 +37,19 @@ repos:
     name: Lint Python code and fix violations
     stages: [pre-commit, pre-push]
     language: system
-    entry: uv run ruff check --fix
+    entry: uv run --group ci nox --session lint --
     types: [python]
 
   - id: format
     name: Format Python code
     stages: [pre-commit, pre-push]
     language: system
-    entry: uv run ruff format
+    entry: uv run --group ci nox --session format --
     types: [python]
 
   - id: typecheck
     name: Type check Python code
     stages: [pre-commit, pre-push]
     language: system
-    entry: uv run mypy
-    types: [python]
-
-  - id: test
-    name: Run tests
-    stages: [pre-commit, pre-push]
-    language: system
-    entry: uv run pytest
-    types: [python]
-
-  - id: test-cov
-    name: Run coverage
-    stages: [pre-commit, pre-push]
-    language: system
-    entry: uv run pytest --cov=src
+    entry: uv run --group ci nox --session type-check --
     types: [python]

@@ -15,11 +15,11 @@ jobs:
       matrix:
         check:
         - name: lint
-          run: uv run pre-commit run lint --all-files
+          run: uv run --group ci nox --session lint
         - name: format
-          run: uv run pre-commit run format --all-files
+          run: uv run --group ci nox --session format
         - name: typecheck
-          run: uv run pre-commit run typecheck --all-files
+          run: uv run --group ci nox --session type-check
 
     name: Python ${{ matrix.check.name }}
     runs-on: ubuntu-latest
@@ -60,4 +60,4 @@ jobs:
         python-version: ${{ matrix.python-version }}
 
     - name: Run tests
-      run: uv run pre-commit run test-cov --all-files
+      run: uv run --group ci nox --session test-cov

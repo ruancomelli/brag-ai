@@ -7,7 +7,22 @@ description = "Generate and maintain a brag document automatically from your Git
 authors = [{ name = "Ruan Comelli", email = "ruancomelli@gmail.com" }]
 readme = "README.md"
 
-requires-python = ">=3.12"
+homepage = "https://github.com/ruancomelli/brag-ai"
+repository = "https://github.com/ruancomelli/brag-ai"
+classifiers = [
+    "Operating System :: OS Independent",
+    "Typing :: Typed",
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+
+requires-python = ">=3.11"
 dependencies = [
     "asyncer>=0.0.8",
     "click>=8.1.8",
@@ -18,6 +33,13 @@ dependencies = [
     "rich>=13.9.4",
     "typer>=0.15.1",
 ]
+
+[project.urls]
+# Homepage = "https://example.com"
+# Documentation = "https://readthedocs.org"
+Repository = "https://github.com/ruancomelli/brag-ai.git"
+Issues = "https://github.com/ruancomelli/brag-ai/issues"
+# Changelog = "https://github.com/ruancomelli/brag-ai/blob/master/CHANGELOG.md"
 
 [project.scripts]
 brag = "brag.__main__:app"
@@ -30,13 +52,13 @@ build-backend = "hatchling.build"
 path = "src/brag/__init__.py"
 
 [dependency-groups]
-dev = [
-    "mypy>=1.15.0",
-    "pre-commit>=4.1.0",
-    "pytest>=8.3.4",
-    "pytest-cov>=6.0.0",
-    "ruff>=0.9.7",
-]
+lint = ["ruff>=0.9.7"]
+format = ["ruff>=0.9.7"]
+type-check = ["mypy>=1.15.0"]
+test = ["pytest>=8.3.4"]
+test-cov = ["pytest>=8.3.4", "pytest-cov>=6.0.0"]
+ci = ["nox>=2025.2.9"]
+pre-commit = ["pre-commit>=4.1.0"]
 
 [tool.mypy]
 plugins = ['pydantic.mypy']
@@ -47,33 +69,34 @@ disallow_untyped_calls = true
 warn_unused_ignores = true
 enable_error_code = "possibly-undefined"
 
+[[tool.mypy.overrides]]
+module = ["nox"]
+follow_untyped_imports = true
+
 [tool.pytest.ini_options]
 xfail_strict = true
-
-[tool.ruff]
-# Set the minimum version of Python that is supported
-target-version = "py312"
+testpaths = ["tests"]
 
 [tool.ruff.lint]
 select = [
-	"D",      # pydocstyle
-	"F",      # pyflakes
-	"I",      # isort
-	"PL",     # pylint
-	"RUF100", # unused-noqa-directive
-	"UP",     # pyupgrade
+    "D",      # pydocstyle
+    "F",      # pyflakes
+    "I",      # isort
+    "PL",     # pylint
+    "RUF100", # unused-noqa-directive
+    "UP",     # pyupgrade
 ]
 ignore = [
-    "D105", # Missing docstring in magic method
-    "D203", # incorrect-blank-line-before-class
-    "D213", # multi-line-summary-second-line
-    "D413", # Missing blank line after last section
+    "D105",    # Missing docstring in magic method
+    "D203",    # incorrect-blank-line-before-class
+    "D213",    # multi-line-summary-second-line
+    "D413",    # Missing blank line after last section
     "PLR0913", # Too many arguments in function definition
 ]
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = [
-	"F401", # Unused imports
+    "F401", # Unused imports
 ]
 "tests/**/*.py" = [
     "D", # Documentation
