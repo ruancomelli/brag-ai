@@ -21,7 +21,7 @@ jobs:
         - name: typecheck
           run: uv run pre-commit run typecheck --all-files
 
-    name: Python ${{ matrix.python-version }} ${{ matrix.check.name }}
+    name: Python ${{ matrix.check.name }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
