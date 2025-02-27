@@ -1,3 +1,3 @@
 #!/bin/bash
 
-uv run --group ci nox --session format -- $@
+uv run --group format ruff format $@

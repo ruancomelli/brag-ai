@@ -1,3 +1,3 @@
 #!/bin/bash
 
-uv run --group ci nox --session test-cov -- $@
+uv run --group test pytest --cov
