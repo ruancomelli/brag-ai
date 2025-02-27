@@ -1,6 +1,6 @@
 import pytest
 
-from brag.text_formatters import compose_text, dedent_triple_quote_string
+from brag.text_formatters import _dedent_triple_quote_string, promptify
 
 
 @pytest.mark.parametrize(
@@ -39,7 +39,7 @@ def test_dedent_triple_quote_string(
     expected: str,
 ) -> None:
     """Test dedent_triple_quote_string."""
-    assert dedent_triple_quote_string(text) == expected
+    assert _dedent_triple_quote_string(text) == expected
 
 
 @pytest.mark.parametrize(
@@ -85,15 +85,15 @@ def test_dedent_triple_quote_string(
         ),
     ),
 )
-def test_compose_text(
+def test_promptify(
     blocks: tuple[str | None, ...],
     expected: str,
 ) -> None:
     """Test compose_text with no blocks."""
-    assert compose_text(*blocks) == expected
+    assert promptify(*blocks) == expected
 
 
-def test_compose_text_custom_joiner() -> None:
+def test_promptify_custom_joiner() -> None:
     """Test compose_text with a custom joiner."""
     block1 = """
         Hello, world!
@@ -102,4 +102,4 @@ def test_compose_text_custom_joiner() -> None:
         Goodbye, world!
         """
     expected = "Hello, world!\n---\nGoodbye, world!"
-    assert compose_text(block1, block2, joiner="\n---\n") == expected
+    assert promptify(block1, block2, joiner="\n---\n") == expected
