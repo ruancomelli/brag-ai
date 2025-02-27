@@ -54,16 +54,16 @@ repos:
     entry: uv run mypy
     types: [python]
 
-  # - id: test
-  #   name: Run tests
-  #   stages: [pre-commit, pre-push]
-  #   language: system
-  #   entry: uv run pytest
-  #   types: [python]
+  - id: test
+    name: Run tests
+    stages: [pre-commit, pre-push]
+    language: system
+    entry: uv run pytest
+    types: [python]
 
-  # - id: coverage
-  #   name: Run coverage
-  #   stages: [pre-commit, pre-push]
-  #   language: system
-  #   entry: uv run pytest --cov=src
-  #   types: [python]
+  - id: test-cov
+    name: Run coverage
+    stages: [pre-commit, pre-push]
+    language: system
+    entry: uv run pytest --cov=src
+    types: [python]

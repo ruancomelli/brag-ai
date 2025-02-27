@@ -24,7 +24,7 @@ def dedent_triple_quote_string(text: str | None) -> str:
     return textwrap.dedent(text).strip()
 
 
-def compose_text(*blocks: str, joiner: str = "\n\n") -> str:
+def compose_text(*blocks: str | None, joiner: str = "\n\n") -> str:
     """Compose a text from multiple building blocks.
 
     All building blocks get formatted in advance to ensure that the result text has consistent indentation.
