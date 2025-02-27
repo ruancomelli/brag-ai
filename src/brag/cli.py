@@ -13,6 +13,7 @@ from typing import Annotated
 from typing import get_args as get_literal_type_args
 
 import click
+from asyncer import runnify
 from github import Github
 from github.Auth import Token
 from loguru import logger
@@ -20,7 +21,6 @@ from pydantic_ai.models import KnownModelName
 from typer import Argument, BadParameter, Option, Typer
 
 from brag.agents import generate_brag_document
-from brag.asyncio import run_with_asyncio
 from brag.github_commits import GithubCommits, format_commit_as_context
 from brag.repository import RepoReference
 
@@ -35,7 +35,7 @@ app = Typer(
 
 
 @app.command()
-@run_with_asyncio
+@runnify
 async def from_repo(
     repo: Annotated[
         RepoReference,
