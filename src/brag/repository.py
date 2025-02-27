@@ -23,7 +23,7 @@ class RepoReference(BaseModel):
 
     @classmethod
     def from_repo_full_name(cls, repo_full_name: str) -> Self:
-        """Creates a RepoReference object from a full repository name string.
+        """Create a RepoReference object from a full repository name string.
 
         Args:
             repo_full_name: The full name of the repository in the format 'owner/name'.

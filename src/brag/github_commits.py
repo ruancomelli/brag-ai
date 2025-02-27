@@ -1,6 +1,6 @@
-"""This module defines classes and functions for fetching and formatting Github commits.
+"""Fetch and format Github commits.
 
-It provides functionality to:
+This module provides functionality to:
 - Fetch commits from a Github repository for a specific user.
 - Format commit information into a context string suitable for generating brag documents.
 """
@@ -30,6 +30,7 @@ class GithubCommits:
         repo: A RepoReference object representing the repository.
         user: The username of the author whose commits are being fetched.
         limit: The maximum number of commits to fetch. If None, all commits are fetched.
+
     """
 
     _commits: PaginatedList[Commit]
@@ -59,9 +60,10 @@ class GithubCommits:
 
         Returns:
             A GithubCommits instance.
+
         """
-        repo = github.get_repo(repo.full_name)
-        commits = repo.get_commits(
+        github_repo = github.get_repo(repo.full_name)
+        commits = github_repo.get_commits(
             author=user,
             since=from_date or NotSet,
             until=to_date or NotSet,
@@ -84,6 +86,10 @@ class GithubCommits:
 
     @property
     def total_count(self) -> int:
+        """Return the total count of commits.
+
+        This is similar to `len(self)`, except that this property ignores the `limit` parameter.
+        """
         return self._commits.totalCount
 
 
@@ -98,6 +104,7 @@ def format_commit_as_context(commit: Commit) -> str:
 
     Returns:
         A string containing the commit message and file diffs.
+
     """
     return "\n\n".join(
         (

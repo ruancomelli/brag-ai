@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  checks:
+    strategy:
+      matrix:
+        check:
+        - name: lint
+          run: uv run poe lint-check
+        - name: typecheck
+          run: uv run poe type-check
+        - name: format
+          run: uv run poe format-check
+
+    name: Python ${{ matrix.check.name }}
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: astral-sh/setup-uv@v5
+      with:
+        enable-cache: true
+
+    - name: Run check ${{ matrix.check.name }}
+      run: ${{ matrix.check.run }}
+
+  tests:
+    strategy:
+      matrix:
+        python-version:
+        - '3.9'
+        - '3.10'
+        - '3.11'
+        - '3.12'
+        - '3.13'
+
+    name: Python test - ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: astral-sh/setup-uv@v5
+      with:
+        enable-cache: true
+        python-version: ${{ matrix.python-version }}
+
+    - name: Run tests
+      run: uv run poe test-cov

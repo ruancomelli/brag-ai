@@ -1,3 +1,5 @@
+"""Utilities for formatting text."""
+
 import textwrap
 
 
@@ -17,7 +19,7 @@ def dedent_triple_quote_string(text: str | None) -> str:
     '''
     ```
     """
-    if not text.strip():
+    if not text:
         return ""
     return textwrap.dedent(text).strip()
 

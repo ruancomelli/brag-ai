@@ -1,6 +1,6 @@
-"""This module defines the command-line interface for the brag application.
+"""Command-line interface for the brag application.
 
-It uses Typer to create a CLI that allows users to generate brag documents
+This script uses Typer to create a CLI that allows users to generate brag documents
 from their GitHub contributions.
 """
 
@@ -132,7 +132,7 @@ async def from_repo(
         ),
     ] = "english",
 ) -> None:
-    """Generates a brag document from a GitHub repository.
+    """Generate a brag document from a GitHub repository.
 
     This command fetches commits from a specified GitHub repository for a given user,
     and then uses an AI model to generate a brag document summarizing those contributions.
