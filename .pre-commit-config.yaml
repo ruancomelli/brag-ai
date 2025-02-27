@@ -1,0 +1,69 @@
+repos:
+- repo: https://github.com/astral-sh/uv-pre-commit
+  rev: 0.6.3
+  hooks:
+      # Update the uv lockfile
+  - id: uv-lock
+        # Install all packages
+  - id: uv-sync
+    args: [--locked, --all-packages]
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v5.0.0
+  hooks:
+  - id: check-added-large-files
+  - id: check-json
+  - id: check-toml
+  - id: check-xml
+  - id: check-yaml
+  - id: end-of-file-fixer
+  - id: no-commit-to-branch
+    args: [--branch, main]
+  - id: pretty-format-json
+    args: [--autofix, --indent, '2']
+  - id: trailing-whitespace
+- repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
+  rev: v2.14.0
+  hooks:
+  - id: pretty-format-yaml
+    args: [--autofix, --indent, '2']
+- repo: https://gitlab.com/vojko.pribudic.foss/pre-commit-update
+  rev: v0.6.1
+  hooks:
+  - id: pre-commit-update
+
+- repo: local
+  hooks:
+  - id: lint
+    name: Lint Python code and fix violations
+    stages: [pre-commit, pre-push]
+    language: system
+    entry: uv run ruff check --fix
+    types: [python]
+
+  - id: format
+    name: Format Python code
+    stages: [pre-commit, pre-push]
+    language: system
+    entry: uv run ruff format
+    types: [python]
+
+  - id: typecheck
+    name: Type check Python code
+    stages: [pre-commit, pre-push]
+    language: system
+    entry: uv run mypy
+    types: [python]
+
+  # - id: test
+  #   name: Run tests
+  #   stages: [pre-commit, pre-push]
+  #   language: system
+  #   entry: uv run pytest
+  #   types: [python]
+
+  # - id: coverage
+  #   name: Run coverage
+  #   stages: [pre-commit, pre-push]
+  #   language: system
+  #   entry: uv run pytest --cov=src
+  #   types: [python]

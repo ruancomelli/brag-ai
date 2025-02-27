@@ -39,9 +39,11 @@ async def generate_brag_document(
         chunks: An iterable of strings, where each string is a chunk of text
             representing a contribution or achievement. This is expected to contain at
             least one chunk.
+        language: The language in which to generate the brag document.
 
     Returns:
         A string containing the generated brag document.
+
     """
     first_chunk, remaining_chunks = _head_and_tail(chunks)
 
@@ -96,6 +98,7 @@ async def _generate_initial_brag_document(
 
     Returns:
         A string containing the initial version of the brag document.
+
     """
     prompt = _generate_initial_brag_document_prompt(chunk)
     result = await agent.run(prompt)
@@ -114,6 +117,7 @@ def _generate_initial_brag_document_prompt(chunk: str) -> str:
 
     Returns:
         A string containing the prompt for generating the initial brag document.
+
     """
     return dedent_triple_quote_string(
         """
@@ -143,6 +147,7 @@ async def _update_brag_document(
 
     Returns:
         A string containing the refined brag document.
+
     """
     prompt = _generate_update_brag_document_prompt(current_brag_document, new_context)
     result = await agent.run(prompt)
@@ -167,6 +172,7 @@ def _generate_update_brag_document_prompt(
 
     Returns:
         A string containing the prompt for refining the brag document.
+
     """
     return dedent_triple_quote_string(
         """
@@ -214,6 +220,7 @@ def _head_and_tail(iterable: Iterable[_T]) -> tuple[_T, Iterator[_T]]:
 
     Raises:
         StopIteration: If the iterable is empty.
+
     """
     iterator = iter(iterable)
     head = next(iterator)

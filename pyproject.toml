@@ -2,8 +2,10 @@
 name = "brag"
 version = "0.1.0"
 description = "Generate and maintain a brag document automatically from your GitHub contributions, powered by AI."
-readme = "README.md"
+
 authors = [{ name = "Ruan Comelli", email = "ruancomelli@gmail.com" }]
+readme = "README.md"
+
 requires-python = ">=3.12"
 dependencies = [
     "click>=8.1.8",
@@ -21,3 +23,55 @@ brag = "brag.__main__:app"
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "mypy>=1.15.0",
+    "pre-commit>=4.1.0",
+    "pytest>=8.3.4",
+    "pytest-cov>=6.0.0",
+    "ruff>=0.9.7",
+]
+
+[tool.mypy]
+files = ["src/**/*.py"]
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_untyped_calls = true
+warn_unused_ignores = true
+enable_error_code = "possibly-undefined"
+
+[tool.pytest.ini_options]
+xfail_strict = true
+
+[tool.ruff]
+# Set the minimum version of Python that is supported
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+	"D",      # pydocstyle
+	"F",      # pyflakes
+	"I",      # isort
+	"PL",     # pylint
+	"RUF100", # unused-noqa-directive
+	"UP",     # pyupgrade
+]
+ignore = [
+    "D105", # Missing docstring in magic method
+    "D203", # incorrect-blank-line-before-class
+    "D213", # multi-line-summary-second-line
+    "D413", # Missing blank line after last section
+    "PLR0913", # Too many arguments in function definition
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = [
+	"F401", # Unused imports
+]
+"tests/**/*.py" = [
+    "D", # Documentation
+]
+
+[tool.ruff.lint.pydocstyle]
+ignore-decorators = ["typing.overload", "ropeskip._typing.override"]
