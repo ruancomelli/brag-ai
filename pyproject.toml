@@ -34,6 +34,7 @@ dev = [
 ]
 
 [tool.mypy]
+plugins = ['pydantic.mypy']
 files = ["src/**/*.py"]
 check_untyped_defs = true
 disallow_any_generics = true
