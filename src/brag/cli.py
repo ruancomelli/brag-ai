@@ -83,7 +83,7 @@ async def from_repo(
     github_api_token: Annotated[
         str | None,
         Option(
-            "--token",
+            "--github-api-token",
             help=(
                 "The GitHub token to use to fetch information from GitHub."
                 " If not provided, the brag document will only include public information."
