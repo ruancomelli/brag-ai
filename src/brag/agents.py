@@ -7,7 +7,7 @@ from typing import TypeVar
 from pydantic_ai import Agent
 from pydantic_ai.models import KnownModelName
 
-from brag.text_formatters import dedent_triple_quote_string
+from brag.text_formatters import promptify
 
 _T = TypeVar("_T")
 
@@ -119,7 +119,7 @@ def _generate_initial_brag_document_prompt(chunk: str) -> str:
         A string containing the prompt for generating the initial brag document.
 
     """
-    return dedent_triple_quote_string(
+    return promptify(
         """
             Generate a brag document from the following context:
             <context>
@@ -174,7 +174,7 @@ def _generate_update_brag_document_prompt(
         A string containing the prompt for refining the brag document.
 
     """
-    return dedent_triple_quote_string(
+    return promptify(
         """
             Produce a refined brag document.
 
@@ -201,7 +201,7 @@ def _build_agent_from_system_prompt(
     return Agent(
         model_name,
         model_settings={"temperature": 0.0},
-        system_prompt=dedent_triple_quote_string(system_prompt),
+        system_prompt=promptify(system_prompt),
     )
 
 
