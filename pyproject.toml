@@ -7,8 +7,6 @@ description = "Generate and maintain a brag document automatically from your Git
 authors = [{ name = "Ruan Comelli", email = "ruancomelli@gmail.com" }]
 readme = "README.md"
 
-homepage = "https://github.com/ruancomelli/brag-ai"
-repository = "https://github.com/ruancomelli/brag-ai"
 classifiers = [
     "Operating System :: OS Independent",
     "Typing :: Typed",
@@ -57,7 +55,6 @@ format = ["ruff>=0.9.7"]
 type-check = ["mypy>=1.15.0"]
 test = ["pytest>=8.3.4"]
 test-cov = ["pytest>=8.3.4", "pytest-cov>=6.0.0"]
-ci = ["nox>=2025.2.9"]
 pre-commit = ["pre-commit>=4.1.0"]
 
 [tool.mypy]

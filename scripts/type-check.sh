@@ -1,3 +1,3 @@
 #!/bin/bash
 
-uv run --group ci nox --session type-check -- $@
+uv run --group type-check mypy $@
