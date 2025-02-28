@@ -1,7 +1,5 @@
 # 💁 Brag AI
 
-[![Nox](https://img.shields.io/badge/%F0%9F%A6%8A-Nox-D85E00.svg)](https://github.com/wntrblm/nox)
-
 Generate and maintain a brag document automatically from your GitHub contributions, powered by AI.
 
 Because your awesome work deserves to be remembered! ✨
