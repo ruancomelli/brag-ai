@@ -9,26 +9,6 @@ PYTHON_VERSIONS = nox.project.python_versions(PYPROJECT)
 
 
 @nox.session(
-    default=False,
-    venv_backend="uv",
-    reuse_venv=True,
-)
-def dev(session: nox.Session) -> None:
-    """Set up a python development environment for the project."""
-    session.run_install(
-        "uv",
-        "sync",
-        "--all-groups",
-        env={"VIRTUAL_ENV": ""},
-    )
-    session.run(
-        "pre-commit",
-        "install",
-        external=True,
-    )
-
-
-@nox.session(
     venv_backend="uv",
     reuse_venv=True,
 )

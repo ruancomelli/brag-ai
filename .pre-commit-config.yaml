@@ -37,19 +37,19 @@ repos:
     name: Lint Python code and fix violations
     stages: [pre-commit, pre-push]
     language: system
-    entry: uv run --group ci nox --session lint --
+    entry: bash scripts/lint.sh
     types: [python]
 
   - id: format
     name: Format Python code
     stages: [pre-commit, pre-push]
     language: system
-    entry: uv run --group ci nox --session format --
+    entry: bash scripts/format.sh
     types: [python]
 
-  - id: typecheck
+  - id: type-check
     name: Type check Python code
     stages: [pre-commit, pre-push]
     language: system
-    entry: uv run --group ci nox --session type-check --
+    entry: bash scripts/type-check.sh
     types: [python]

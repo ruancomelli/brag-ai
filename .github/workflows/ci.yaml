@@ -15,11 +15,11 @@ jobs:
       matrix:
         check:
         - name: lint
-          run: uv run --group ci nox --session lint
+          run: bash scripts/lint.sh
         - name: format
-          run: uv run --group ci nox --session format
-        - name: typecheck
-          run: uv run --group ci nox --session type-check
+          run: bash scripts/format.sh
+        - name: type-check
+          run: bash scripts/type-check.sh
 
     name: Python ${{ matrix.check.name }}
     runs-on: ubuntu-latest
@@ -60,4 +60,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
 
     - name: Run tests
-      run: uv run --group ci nox --session test-cov
+      run: bash scripts/test.sh
+
+    - name: Run tests with coverage
+      run: bash scripts/test-cov.sh
