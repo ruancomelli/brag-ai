@@ -30,7 +30,10 @@ repos:
   rev: v0.6.1
   hooks:
   - id: pre-commit-update
-
+- repo: https://github.com/koalaman/shellcheck-precommit
+  rev: v0.10.0
+  hooks:
+  - id: shellcheck
 - repo: local
   hooks:
   - id: lint
