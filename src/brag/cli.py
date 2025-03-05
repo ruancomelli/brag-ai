@@ -18,6 +18,11 @@ from github import Github
 from github.Auth import Token
 from loguru import logger
 from pydantic_ai.models import KnownModelName
+from rich.progress import (
+    MofNCompleteColumn,
+    Progress,
+    SpinnerColumn,
+)
 from typer import Argument, BadParameter, Option, Typer
 
 from brag.agents import generate_brag_document
@@ -169,14 +174,24 @@ async def from_repo(
             to_date=to_date,
             limit=limit,
         )
-
+        commits_count = len(commits)
         context_chunks = map(format_commit_as_context, commits)
 
-        brag_document = await generate_brag_document(
-            model_name,
-            context_chunks,
-            language=language,
-        )
+        with Progress(
+            SpinnerColumn(),
+            "[progress.description]Processing GitHub commits",
+            MofNCompleteColumn(),
+            "[progress.percentage]({task.percentage:>3.0f}%)",
+            "[progress.elapsed](Elapsed: {task.elapsed:.2f}s)",
+        ) as progress:
+            brag_document = await generate_brag_document(
+                model_name,
+                progress.track(
+                    context_chunks,
+                    total=commits_count,
+                ),
+                language=language,
+            )
 
     # Open the output file if specified, otherwise use stdout
     with open(output, "w") if output else sys.stdout as f:
