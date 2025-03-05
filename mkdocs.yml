@@ -10,13 +10,11 @@ edit_uri: edit/main/docs
 
 nav:
 - Welcome: index.md
-- installation.md
-- usage.md
-- configuration.md
-- api-reference.md
-- contributing.md
-- development.md
-- release-notes.md
+- Installation: installation.md
+- Usage: usage.md
+- Configuration: configuration.md
+- API Reference: api-reference.md
+- Release Notes: release-notes.md
 - External links:
   - GitHub 🔗: https://github.com/ruancomelli/brag-ai
 
