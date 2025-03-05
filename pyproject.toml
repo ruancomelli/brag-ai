@@ -55,6 +55,11 @@ type-check = ["mypy>=1.15.0"]
 test = ["pytest>=8.3.4"]
 test-cov = ["pytest>=8.3.4", "pytest-cov>=6.0.0"]
 pre-commit = ["pre-commit>=4.1.0"]
+docs = [
+    "mkdocs>=1.6.1",
+    "mkdocs-material[imaging]>=9.6.7",
+    "pymdown-extensions>=10.14.3",
+]
 
 [tool.mypy]
 plugins = ['pydantic.mypy']

@@ -1,0 +1,107 @@
+strict: true
+site_name: Brag AI
+site_description: Generate and maintain a brag document automatically from your GitHub contributions, powered by AI.
+site_url: https://ruancomelli.github.io/brag-ai
+docs_dir: docs
+site_dir: site
+dev_addr: 127.0.0.1:8000
+repo_url: https://github.com/ruancomelli/brag-ai
+edit_uri: edit/main/docs
+
+nav:
+- Welcome: index.md
+- installation.md
+- usage.md
+- configuration.md
+- api-reference.md
+- contributing.md
+- development.md
+- release-notes.md
+- External links:
+  - GitHub 🔗: https://github.com/ruancomelli/brag-ai
+
+plugins:
+- search
+- social
+
+theme:
+  name: material
+  logo: assets/hero.webp
+  favicon: assets/hero.webp
+  palette:
+    # Palette toggle for automatic mode
+  - media: (prefers-color-scheme)
+    toggle:
+      icon: material/brightness-auto
+      name: Switch to light mode
+
+    # Palette toggle for light mode
+  - media: '(prefers-color-scheme: light)'
+    scheme: default
+    toggle:
+      icon: material/brightness-7
+      name: Switch to dark mode
+
+    # Palette toggle for dark mode
+  - media: '(prefers-color-scheme: dark)'
+    scheme: slate
+    toggle:
+      icon: material/brightness-4
+      name: Switch to system preference
+  icon:
+    annotation: material/arrow-right-circle
+    repo: fontawesome/brands/github
+  features:
+  - navigation.expand
+  - navigation.footer
+  - navigation.sections
+  - navigation.tracking
+  - content.action.edit
+  - content.action.view
+  - content.code.copy
+  - content.code.annotate
+
+markdown_extensions:
+- admonition
+- pymdownx.details
+- pymdownx.magiclink:
+    repo_url_shorthand: true
+    normalize_issue_symbols: true
+    provider: github
+    user: ruancomelli
+    repo: brag-ai
+- pymdownx.snippets:
+    base_path:
+    - docs/snippets
+    check_paths: true
+- pymdownx.superfences
+- pymdownx.tabbed:
+    alternate_style: true
+- md_in_html
+- attr_list
+- toc:
+    permalink: 🔗
+- pymdownx.highlight:
+    anchor_linenums: true
+    line_spans: __span
+    pygments_lang_class: true
+- pymdownx.inlinehilite
+
+validation:
+  omitted_files: warn
+  absolute_links: warn
+  unrecognized_links: warn
+
+extra_css:
+- css/extra.css
+
+exclude_docs: |
+  snippets/
+
+extra:
+  social:
+  - icon: fontawesome/brands/github
+    link: https://github.com/ruancomelli/brag-ai
+    name: ruancomelli/brag-ai on GitHub
+
+copyright: '&copy; 2024 Ruan Comelli'
