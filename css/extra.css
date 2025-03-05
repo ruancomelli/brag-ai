@@ -1,0 +1,139 @@
+/* Brag AI Documentation Custom Styles */
+
+/* Custom colors and fonts */
+:root {
+	--md-primary-fg-color: #7c4dff;
+	--md-primary-fg-color--light: #c5b3ff;
+	--md-primary-fg-color--dark: #4a2fe3;
+	--md-accent-fg-color: #ff4081;
+}
+
+/* Emoji styling */
+.md-typeset .emojione,
+.md-typeset .twemoji {
+	vertical-align: -0.2em;
+}
+
+/* Code blocks */
+.md-typeset code {
+	border-radius: 3px;
+	font-size: 0.9em;
+}
+
+.md-typeset pre {
+	border-radius: 5px;
+}
+
+/* Admonitions */
+.md-typeset .admonition,
+.md-typeset details {
+	border-radius: 5px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
+}
+
+/* Tables */
+.md-typeset table:not([class]) {
+	box-shadow: 0 2px 4px rgba(0, 0, 0, .05);
+	border-radius: 5px;
+}
+
+.md-typeset table:not([class]) th {
+	background-color: var(--md-primary-fg-color--light);
+	color: #333;
+}
+
+/* Permalink icon */
+.md-typeset .headerlink {
+	opacity: 0.5;
+}
+
+.md-typeset h1:hover .headerlink,
+.md-typeset h2:hover .headerlink,
+.md-typeset h3:hover .headerlink,
+.md-typeset h4:hover .headerlink,
+.md-typeset h5:hover .headerlink,
+.md-typeset h6:hover .headerlink {
+	opacity: 1;
+}
+
+/* Hero */
+.md-typeset .hero {
+	margin: 2em 0;
+	text-align: center;
+}
+
+.md-typeset .hero img {
+	max-width: 300px;
+	margin: 0 auto;
+	display: block;
+}
+
+/* Buttons */
+.md-button {
+	border-radius: 3px;
+	transition: all 0.3s;
+}
+
+.md-button:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 3px 6px rgba(0, 0, 0, .2);
+}
+
+/* Feature cards */
+.feature-card {
+	display: flex;
+	flex-direction: column;
+	margin: 1em 0;
+	padding: 1em;
+	background-color: #f8f9fa;
+	border-radius: 5px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, .05);
+	transition: all 0.3s;
+}
+
+.feature-card:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 4px 8px rgba(0, 0, 0, .1);
+}
+
+.feature-card h3 {
+	margin-top: 0;
+}
+
+/* Code annotations */
+.md-typeset .code-annotation-button {
+	background-color: var(--md-accent-fg-color);
+}
+
+/* Terminal blocks */
+.terminal {
+	background-color: #2d2d2d;
+	color: #f8f8f2;
+	padding: 1em;
+	border-radius: 5px;
+	font-family: monospace;
+	margin: 1em 0;
+}
+
+/* Navigation styling */
+.md-nav__item .md-nav__link--active {
+	font-weight: bold;
+	color: var(--md-accent-fg-color);
+}
+
+/* Footer */
+.md-footer-meta {
+	background-color: #212121;
+}
+
+/* Print styles */
+@media print {
+	.md-typeset a {
+		color: #000 !important;
+		text-decoration: underline;
+	}
+
+	.md-footer {
+		display: none;
+	}
+}
