@@ -1,3 +1,3 @@
 #!/bin/bash
 
-uv run --group format ruff format $@
+uv run --group format ruff format "$@"
