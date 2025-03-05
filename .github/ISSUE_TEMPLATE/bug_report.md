@@ -1,10 +1,9 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-title: ''
-labels: ''
-assignees: ''
-
+title: ""
+labels: "bug"
+assignees: ""
 ---
 
 **Describe the bug**
@@ -12,6 +11,7 @@ A clear and concise description of what the bug is.
 
 **To Reproduce**
 Steps to reproduce the behavior:
+
 1. Go to '...'
 2. Click on '....'
 3. Scroll down to '....'
@@ -23,16 +23,19 @@ A clear and concise description of what you expected to happen.
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+**Environment (please complete the relevant information):**
 
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
+- OS: [e.g. macOS 12.6, Windows 11, Ubuntu 22.04]
+- Browser (if applicable): [e.g. Chrome 108, Firefox 106]
+- Node.js version (if applicable): [e.g. 18.12.1]
+- Package version: [e.g. 1.2.0]
+- Other relevant dependencies:
+
+**Possible Solution**
+If you have ideas about what might be causing the issue or how to fix it, please share them here.
 
 **Additional context**
 Add any other context about the problem here.
+
+**Would you be willing to submit a PR for this bug?**
+Let us know if you'd be interested in contributing a fix.
