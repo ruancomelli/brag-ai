@@ -35,6 +35,7 @@ app = Typer(
 
 
 @app.command()
+# Runnify is required to use async functions with Typer (because Typer is not async)
 @runnify
 async def from_repo(
     repo: Annotated[
