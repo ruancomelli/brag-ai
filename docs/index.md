@@ -44,7 +44,7 @@ Then head over to the [Usage](usage.md) guide to learn how to generate your firs
 
 ## Community
 
-Got ideas? We'd love to hear them! Check out our [Contributing Guide](contributing.md) to join the fun! 🎈
+Got ideas? We'd love to hear them! Check out our [Contributing Guide](https://github.com/ruancomelli/brag-ai/blob/main/CONTRIBUTING.md) to join the fun! 🎈
 
 ## License
 
