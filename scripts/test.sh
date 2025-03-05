@@ -1,3 +1,3 @@
 #!/bin/bash
 
-uv run --group test pytest $@
+uv run --group test pytest "$@"
