@@ -59,7 +59,7 @@ jobs:
         sed -i 's/__version__ = ".*"/__version__ = "${{ steps.new-version.outputs.version }}"/' src/brag/__init__.py
 
     - name: Update changelog with new version
-      uses: orhun/git-cliff-action@v3
+      uses: orhun/git-cliff-action@v4
       id: update-changelog
       with:
         config: .github/git-cliff-config.toml
@@ -68,7 +68,7 @@ jobs:
         OUTPUT: CHANGELOG.md
 
     - name: Generate release changelog
-      uses: orhun/git-cliff-action@v3
+      uses: orhun/git-cliff-action@v4
       id: generate-release-changelog
       with:
         config: .github/git-cliff-config.toml
