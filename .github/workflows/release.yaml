@@ -73,9 +73,9 @@ jobs:
 
     - name: Commit and push version and changelog
       run: |
-        git config --global user.name ruancomelli
-        git config --global user.email 2275292+ruancomelli@users.noreply.github.com
-        git remote set-url --push origin "https://ruancomelli:${{ secrets.MAIN_BRANCH_PROTECTION_BYPASS_PAT }}@github.com/ruancomelli/brag-ai"
+        git config --global user.name ${{ github.actor }}
+        git config --global user.email ${{ github.actor }}@users.noreply.github.com
+        git remote set-url --push origin "https://${{ github.actor }}:${{ secrets.MAIN_BRANCH_PROTECTION_BYPASS_PAT }}@github.com/${{ github.repository }}"
 
         git add src/brag/__init__.py
         git add CHANGELOG.md
