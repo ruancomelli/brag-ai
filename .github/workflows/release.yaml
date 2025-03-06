@@ -32,22 +32,21 @@ jobs:
       id: new-version
       run: |
         # shellcheck disable=SC2276
-        input-version="${{ github.event.inputs.version }}"
-        if [ -z "${input-version}" ]; then
+        if [ -z "${{ github.event.inputs.version }}" ]; then
           echo "No version provided, using next version from git-cliff"
           version=$(uvx git-cliff --unreleased --bump --context | jq -r .[0].version)
-        elif [ "${input-version}" = "major" ]; then
+        elif [ "${{ github.event.inputs.version }}" = "major" ]; then
           echo "Major version bump requested"
           version=$(uvx git-cliff --unreleased --bump major --context | jq -r .[0].version)
-        elif [ "${input-version}" = "minor" ]; then
+        elif [ "${{ github.event.inputs.version }}" = "minor" ]; then
           echo "Minor version bump requested"
           version=$(uvx git-cliff --unreleased --bump minor --context | jq -r .[0].version)
-        elif [ "${input-version}" = "patch" ]; then
+        elif [ "${{ github.event.inputs.version }}" = "patch" ]; then
           echo "Patch version bump requested"
           version=$(uvx git-cliff --unreleased --bump patch --context | jq -r .[0].version)
         else
           echo "Using specific version: ${input-version}"
-          version="${input-version}"
+          version="${{ github.event.inputs.version }}"
         fi
         echo "version=${version}" >> "${GITHUB_OUTPUT}"
 
