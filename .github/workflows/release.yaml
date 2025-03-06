@@ -28,30 +28,28 @@ jobs:
       with:
         enable-cache: false
 
-    - name: Get current version
-      id: current-version
-      uses: ./.github/actions/current-version
-
     - name: Calculate new version
       id: new-version
       run: |
-        if [ -z "${{ github.event.inputs.version }}" ]; then
+        # shellcheck disable=SC2276
+        input-version="${{ github.event.inputs.version }}"
+        if [ -z "${input-version}" ]; then
           echo "No version provided, using next version from git-cliff"
-          version=${{ steps.current-version.outputs.next-version }}
-        elif [ "${{ github.event.inputs.version }}" = "major" ]; then
+          version=$(uvx git-cliff --unreleased --bump --context | jq -r .[0].version)
+        elif [ "${input-version}" = "major" ]; then
           echo "Major version bump requested"
-          version=${{ steps.current-version.outputs.next-major-version }}
-        elif [ "${{ github.event.inputs.version }}" = "minor" ]; then
+          version=$(uvx git-cliff --unreleased --bump major --context | jq -r .[0].version)
+        elif [ "${input-version}" = "minor" ]; then
           echo "Minor version bump requested"
-          version=${{ steps.current-version.outputs.next-minor-version }}
-        elif [ "${{ github.event.inputs.version }}" = "patch" ]; then
+          version=$(uvx git-cliff --unreleased --bump minor --context | jq -r .[0].version)
+        elif [ "${input-version}" = "patch" ]; then
           echo "Patch version bump requested"
-          version=${{ steps.current-version.outputs.next-patch-version }}
+          version=$(uvx git-cliff --unreleased --bump patch --context | jq -r .[0].version)
         else
-          echo "Using specific version: ${{ github.event.inputs.version }}"
-          version=${{ github.event.inputs.version }}
+          echo "Using specific version: ${input-version}"
+          version="${input-version}"
         fi
-        echo "version=$version" >> $GITHUB_OUTPUT
+        echo "version=${version}" >> "${GITHUB_OUTPUT}"
 
     - name: Update version in __init__.py
       run: |
@@ -74,14 +72,15 @@ jobs:
         config: .github/git-cliff-config.toml
         args: -vv --latest
 
-    - name: Commit version and changelog
+    - name: Commit and push version and changelog
       run: |
+        git config --global user.name "${GITHUB_ACTOR}"
+        git config --global user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
+
         git add src/brag/__init__.py
         git add CHANGELOG.md
         git commit -m "chore: release v${{ steps.new-version.outputs.version }}"
 
-    - name: Push changes
-      run: |
         git tag v${{ steps.new-version.outputs.version }}
         git push origin main
         git push origin v${{ steps.new-version.outputs.version }}
