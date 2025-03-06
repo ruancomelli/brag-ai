@@ -78,7 +78,7 @@ wheels = [
 ]
 
 [[package]]
-name = "brag"
+name = "brag-ai"
 source = { editable = "." }
 dependencies = [
     { name = "asyncer" },
