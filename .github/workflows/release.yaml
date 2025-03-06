@@ -74,6 +74,7 @@ jobs:
       run: |
         git config --global user.name github-actions
         git config --global user.email github-actions@github.com
+        git remote set-url --push origin "https://ruancomelli:${{ secrets.GITHUB_TOKEN }}@github.com/ruancomelli/brag-ai"
 
         git add src/brag/__init__.py
         git add CHANGELOG.md
