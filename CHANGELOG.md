@@ -1,10 +1,19 @@
 # Changelog
 
+## [0.1.2](https://github.com/ruancomelli/brag-ai/compare/vv0.1.1..vv0.1.2) - 2025-03-06
+
+### 🐛 Bug Fixes
+
+- *(release)* Correctly dispatch the `publish` workflow after the `release` ([#42](https://github.com/ruancomelli/brag-ai/issues/42)) - ([935d6f0](https://github.com/ruancomelli/brag-ai/commit/935d6f0a656a095277162eb01bffaa0c213377b1))
 ## [0.1.1](https://github.com/ruancomelli/brag-ai/compare/v0.1.0..vv0.1.1) - 2025-03-06
 
 ### 🐛 Bug Fixes
 
 - *(release)* Use the actor name provided by the `github` environment ([#41](https://github.com/ruancomelli/brag-ai/issues/41)) - ([b578347](https://github.com/ruancomelli/brag-ai/commit/b578347544db77d4711dd54abe01137befd1859d))
+
+### 🔧 Chores
+
+- Release vv0.1.1 - ([4d80e4d](https://github.com/ruancomelli/brag-ai/commit/4d80e4d05b654051dea1bbee9e39307ece8c56c5))
 ## [0.1.0] - 2025-03-06
 
 ### ✨ Features
