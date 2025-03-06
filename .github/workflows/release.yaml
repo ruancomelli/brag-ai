@@ -31,7 +31,6 @@ jobs:
     - name: Calculate new version
       id: new-version
       run: |
-        # shellcheck disable=SC2276
         if [ -z "${{ github.event.inputs.version }}" ]; then
           echo "No version provided, using next version from git-cliff"
           version=$(uvx git-cliff --unreleased --bump --context | jq -r .[0].version)
