@@ -1,0 +1,54 @@
+name: Current Version
+description: Get the current version of the project
+outputs:
+  version:
+    description: The current version of the project
+    value: ${{ steps.current-version.outputs.result }}
+  next-version:
+    description: The next version of the project
+    value: ${{ steps.next-version.outputs.result }}
+  next-major-version:
+    description: The next major version of the project
+    value: ${{ steps.next-major-version.outputs.result }}
+  next-minor-version:
+    description: The next minor version of the project
+    value: ${{ steps.next-minor-version.outputs.result }}
+  next-patch-version:
+    description: The next patch version of the project
+    value: ${{ steps.next-patch-version.outputs.result }}
+
+runs:
+  using: composite
+  steps:
+  - name: Setup UV
+    uses: astral-sh/setup-uv@v5
+    with:
+      enable-cache: false
+
+  - name: Get current version
+    id: current-version
+    run: uvx hatch version
+    shell: bash
+
+  - name: Set up git-cliff
+    uses: kenji-miyake/setup-git-cliff@v1
+
+  - name: Get next version
+    id: next-version
+    run: git cliff --unreleased --bump --context | jq -r .[0].version
+    shell: bash
+
+  - name: Get next major version
+    id: next-major-version
+    run: git cliff --unreleased --bump major --context | jq -r .[0].version
+    shell: bash
+
+  - name: Get next minor version
+    id: next-minor-version
+    run: git cliff --unreleased --bump minor --context | jq -r .[0].version
+    shell: bash
+
+  - name: Get next patch version
+    id: next-patch-version
+    run: git cliff --unreleased --bump patch --context | jq -r .[0].version
+    shell: bash
