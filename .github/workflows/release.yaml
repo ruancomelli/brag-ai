@@ -48,11 +48,12 @@ jobs:
           echo "Using specific version: ${input-version}"
           version="${{ github.event.inputs.version }}"
         fi
-        echo "version=${version}" >> "${GITHUB_OUTPUT}"
+        # Remove the v prefix from the version
+        echo "version=${version#v}" >> "${GITHUB_OUTPUT}"
 
     - name: Update version in __init__.py
       run: |
-        echo "Updating version to ${{ steps.new-version.outputs.version }}"
+        echo "Updating version to v${{ steps.new-version.outputs.version }}"
         sed -i 's/__version__ = ".*"/__version__ = "${{ steps.new-version.outputs.version }}"/' src/brag/__init__.py
 
     - name: Update changelog with new version
@@ -92,3 +93,27 @@ jobs:
         name: v${{ steps.new-version.outputs.version }}
         body: ${{ steps.generate-release-changelog.outputs.content }}
         token: ${{ secrets.GITHUB_TOKEN }}
+
+  publish-pypi:
+    name: Publish to PyPI
+    needs: release
+    runs-on: ubuntu-latest
+    environment:
+      name: release
+    permissions:
+      id-token: write
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        persist-credentials: false
+    - uses: astral-sh/setup-uv@v5
+      with:
+        enable-cache: false
+    - name: Build package
+      run: uv build
+        # Check that basic features work and we didn't miss to include crucial files
+        # - name: Smoke test (wheel)
+        #   run: uv run --isolated --no-project -p 3.13 --with dist/*.whl tests/smoke_test.py
+        # - name: Smoke test (source distribution)
+        #   run: uv run --isolated --no-project -p 3.13 --with dist/*.tar.gz tests/smoke_test.py
+    - run: uv publish --trusted-publishing always
