@@ -45,10 +45,11 @@ repos:
   hooks:
   - id: actionlint
 
-- repo: https://github.com/woodruffw/zizmor-pre-commit
-  rev: v1.4.1
-  hooks:
-  - id: zizmor
+# - repo: https://github.com/woodruffw/zizmor-pre-commit
+#   rev: v1.4.1
+#   hooks:
+#   - id: zizmor
+#     args: [--config, .github/zizmor.yml]
 
 - repo: local
   hooks:
