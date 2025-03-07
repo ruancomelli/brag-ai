@@ -1,10 +1,24 @@
 # Changelog
 
+## [0.1.3](https://github.com/ruancomelli/brag-ai/compare/vv0.1.2..v0.1.3) - 2025-03-07
+
+### 🐛 Bug Fixes
+
+- *(release)* Remove extra leading `v`s in version tag ([#45](https://github.com/ruancomelli/brag-ai/issues/45)) - ([205e7c4](https://github.com/ruancomelli/brag-ai/commit/205e7c434621d0576834ccdb37cd62932315cb4f))
+
+### 🔧 Chores
+
+- Add documentation and changelog URLs to project URLs ([#44](https://github.com/ruancomelli/brag-ai/issues/44)) - ([e697335](https://github.com/ruancomelli/brag-ai/commit/e6973354da681ffbfc6e4d175282472cd5e7f23c))
+- Fix project name from `brag` to `brag-ai` ([#43](https://github.com/ruancomelli/brag-ai/issues/43)) - ([2364bd5](https://github.com/ruancomelli/brag-ai/commit/2364bd50ca395721149a56b591df5e58a27e1328))
 ## [0.1.2](https://github.com/ruancomelli/brag-ai/compare/vv0.1.1..vv0.1.2) - 2025-03-06
 
 ### 🐛 Bug Fixes
 
 - *(release)* Correctly dispatch the `publish` workflow after the `release` ([#42](https://github.com/ruancomelli/brag-ai/issues/42)) - ([935d6f0](https://github.com/ruancomelli/brag-ai/commit/935d6f0a656a095277162eb01bffaa0c213377b1))
+
+### 🔧 Chores
+
+- Release vv0.1.2 - ([342e061](https://github.com/ruancomelli/brag-ai/commit/342e061a953659f6fc72bba1d49e08eb66dc0d75))
 ## [0.1.1](https://github.com/ruancomelli/brag-ai/compare/v0.1.0..vv0.1.1) - 2025-03-06
 
 ### 🐛 Bug Fixes
