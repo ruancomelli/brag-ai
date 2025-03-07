@@ -33,10 +33,10 @@ dependencies = [
 
 [project.urls]
 # Homepage = "https://example.com"
-# Documentation = "https://readthedocs.org"
+Documentation = "https://ruancomelli.github.io/brag-ai/"
 Repository = "https://github.com/ruancomelli/brag-ai.git"
 Issues = "https://github.com/ruancomelli/brag-ai/issues"
-# Changelog = "https://github.com/ruancomelli/brag-ai/blob/master/CHANGELOG.md"
+Changelog = "https://github.com/ruancomelli/brag-ai/blob/main/CHANGELOG.md"
 
 [project.scripts]
 brag = "brag.__main__:app"
