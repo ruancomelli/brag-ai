@@ -1,7 +1,7 @@
 [project]
 dynamic = ["version"]
 
-name = "brag"
+name = "brag-ai"
 description = "Generate and maintain a brag document automatically from your GitHub contributions, powered by AI."
 
 authors = [{ name = "Ruan Comelli", email = "ruancomelli@gmail.com" }]
@@ -47,6 +47,9 @@ build-backend = "hatchling.build"
 
 [tool.hatch.version]
 path = "src/brag/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/brag"]
 
 [dependency-groups]
 lint = ["ruff>=0.9.7"]
