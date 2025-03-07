@@ -48,6 +48,9 @@ build-backend = "hatchling.build"
 [tool.hatch.version]
 path = "src/brag/__init__.py"
 
+[tool.hatch.build.targets.wheel]
+packages = ["src/brag"]
+
 [dependency-groups]
 lint = ["ruff>=0.9.7"]
 format = ["ruff>=0.9.7"]
