@@ -49,7 +49,7 @@ jobs:
           version="${{ github.event.inputs.version }}"
         fi
         # Remove the v prefix from the version
-        echo "version=${version#v}" >> "${GITHUB_OUTPUT}"
+        echo "version=${version//v}" >> "${GITHUB_OUTPUT}"
 
     - name: Update version in __init__.py
       run: |
