@@ -1,5 +1,11 @@
 # 💁 Brag AI
 
+<!-- [![License](https://img.shields.io/pypi/l/brag-ai.svg?color=green)](https://github.com/ruancomelli/brag-ai/raw/main/LICENSE) -->
+[![PyPI](https://img.shields.io/pypi/v/brag-ai.svg?color=green)](https://pypi.org/project/brag-ai)
+[![Python Version](https://img.shields.io/pypi/pyversions/brag-ai.svg?color=green)](https://python.org)
+[![CI](https://github.com/ruancomelli/brag-ai/actions/workflows/ci.yaml/badge.svg)](https://github.com/ruancomelli/brag-ai/actions/workflows/ci.yaml)
+[![Codecov](https://codecov.io/gh/ruancomelli/brag-ai/branch/main/graph/badge.svg)](https://codecov.io/gh/ruancomelli/brag-ai)
+
 Generate and maintain a brag document automatically from your GitHub contributions, powered by AI.
 
 Because your awesome work deserves to be remembered! ✨
