@@ -1,5 +1,22 @@
 # 💁 Brag AI
 
+<!-- [![License](https://img.shields.io/pypi/l/brag-ai.svg?color=green)](https://github.com/ruancomelli/brag-ai/raw/main/LICENSE) -->
+
+[![PyPI](https://img.shields.io/pypi/v/brag-ai.svg?logo=pypi&logoColor=white)](https://pypi.org/project/brag-ai)
+[![Python Version](https://img.shields.io/pypi/pyversions/brag-ai.svg?logo=python&logoColor=yellow)](https://python.org)
+[![Docs](https://img.shields.io/badge/docs-latest-blue)](https://ruancomelli.github.io/brag-ai/)
+
+[![uv-managed](https://img.shields.io/badge/managed-261230?label=uv&logo=uv&labelColor=gray)](https://github.com/astral-sh/uv)
+[![CI](https://github.com/ruancomelli/brag-ai/actions/workflows/ci.yaml/badge.svg)](https://github.com/ruancomelli/brag-ai/actions/workflows/ci.yaml)
+[![Codecov](https://codecov.io/gh/ruancomelli/brag-ai/branch/main/graph/badge.svg)](https://codecov.io/gh/ruancomelli/brag-ai)
+[![Sourcery](https://img.shields.io/badge/Sourcery-enabled-orange?logo=hackthebox&logoColor=orange)](https://sourcery.ai)
+[![Code style: Ruff](https://img.shields.io/badge/Ruff-checked-261230.svg?logo=ruff)](https://docs.astral.sh/ruff/)
+[![Pydantic v2](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/pydantic/pydantic/main/docs/badge/v2.json)](https://pydantic.dev)
+
+[![SemVer](https://img.shields.io/badge/semver-2.0.0-green)](https://semver.org/spec/v2.0.0.html)
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
+[![Author: ruancomelli](https://img.shields.io/badge/ruancomelli-blue?style=flat&label=author)](https://github.com/ruancomelli)
+
 Generate and maintain a brag document automatically from your GitHub contributions, powered by AI.
 
 Because your awesome work deserves to be remembered! ✨
