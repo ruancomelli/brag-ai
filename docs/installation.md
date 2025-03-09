@@ -37,7 +37,7 @@ Make sure to use a [virtual environment](https://docs.python.org/3/library/venv.
 
 ## Requirements
 
-- Python 3.8 or higher
+- Python 3.12 or higher
 - A GitHub account (for accessing repositories)
 - An LLM provider API key (for AI processing)
 
