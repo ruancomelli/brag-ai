@@ -88,4 +88,3 @@ If you see the help message and version information, you're ready to start using
 
 - Read the [Usage Guide](usage.md) to learn how to use Brag AI
 - Check out the [Configuration Options](configuration.md) to customize your experience
-- Visit the [API Reference](api-reference.md) for detailed technical information

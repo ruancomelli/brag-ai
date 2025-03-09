@@ -99,7 +99,3 @@ For a complete list of commands and options, use the `--help` flag:
 ```bash
 brag --help
 ```
-
-## Next Steps
-
-Now that you know how to use Brag AI, you might want to check out the [Configuration Guide](configuration.md) for more advanced options or the [API Reference](api-reference.md) if you want to use Brag AI programmatically.

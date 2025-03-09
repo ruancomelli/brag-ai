@@ -80,7 +80,6 @@ For detailed instructions, please refer to the documentation:
 - [Installation Guide](https://ruancomelli.github.io/brag-ai/installation/)
 - [Usage Guide](https://ruancomelli.github.io/brag-ai/usage/)
 - [Configuration Options](https://ruancomelli.github.io/brag-ai/configuration/)
-- [API Reference](https://ruancomelli.github.io/brag-ai/api-reference/)
 - [Development Guide](https://github.com/ruancomelli/brag-ai/blob/main/CONTRIBUTING.md)
 
 ## Coming Soon™ 🚀
