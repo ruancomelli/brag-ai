@@ -36,21 +36,24 @@ Perfect for:
 
 ## Quick Start
 
-This project is still not published to PyPI. You can install it from source using pip:
+Install `brag-ai` using `uv`, `pipx` or `pip`:
 
 ```console
 # Install the package
-pip install git+https://github.com/ruancomelli/brag-ai.git
+uv tool install brag-ai
+# or
+# pipx install brag-ai
+# or
+# pip install brag-ai
 
 # Generate a brag document from a GitHub repository
 brag owner/repo --user github-username
 ```
 
-If you use [`uv`](https://docs.astral.sh/uv/), you can also run this tool using
-`uvx` tool calling:
+If you use [`uv`](https://docs.astral.sh/uv/), you can also install and run this tool in one go using the `uvx` tool:
 
 ```console
-uvx --from git+https://github.com/ruancomelli/brag-ai brag --help # or any other command
+uvx --from brag-ai brag owner/repo --user github-username
 ```
 
 ## Documentation

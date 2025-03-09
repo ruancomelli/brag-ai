@@ -29,9 +29,26 @@ Perfect for:
 
 ## Getting Started
 
-Check out the [Installation](installation.md) guide to get Brag AI up and running on your system.
+Install `brag-ai` using `uv`, `pipx` or `pip`:
 
-Then head over to the [Usage](usage.md) guide to learn how to generate your first brag document.
+```console
+# Install the package
+uv tool install brag-ai
+# or
+# pipx install brag-ai
+# or
+# pip install brag-ai
+```
+
+Head over to the [Installation](installation.md) page for more details on how to install `brag-ai`.
+
+After installation, you can generate a brag document from a GitHub repository with:
+
+```console
+brag owner/repo --user github-username
+```
+
+Check out the [Usage](usage.md) page for more details on how to use `brag-ai`.
 
 ## Coming Soon™ 🚀
 

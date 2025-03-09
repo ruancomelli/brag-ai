@@ -1,78 +1,91 @@
 # Installation
 
-There are several ways to install Brag AI, depending on your needs and preferences.
+There are several ways to install Brag AI. Choose the one that best suits your needs.
 
-## Requirements
+## Using [`uv`](https://docs.astral.sh/uv/) (Recommended)
 
-- Python 3.12 or higher
-- A GitHub account (for generating brag documents from GitHub repositories)
-- An API key for at least one AI provider (OpenAI, Anthropic, or Google) if you want to use their models
-
-## Installation Methods
-
-### From Source (Recommended for Now)
-
-This project is still not published to PyPI. You can install it from source using pip:
+The easiest way to install Brag AI is using [`uv`](https://docs.astral.sh/uv/):
 
 ```bash
-pip install git+https://github.com/ruancomelli/brag-ai.git
+uv tool install brag-ai
 ```
 
-### Using `uv`
-
-If you use [`uv`](https://docs.astral.sh/uv/), you can also run this tool using
-`uvx` tool calling without installation:
-
-```bash
-uvx --from git+https://github.com/ruancomelli/brag-ai brag --help # or any other command
-```
-
-## Verifying Your Installation
-
-To verify that Brag AI was installed correctly, run:
+After installation, you can verify it worked by running:
 
 ```bash
 brag --version
 ```
 
-You should see the current version number printed to the console.
+## Using [`pipx`](https://pipx.pypa.io/stable/)
 
-## Setting Up API Keys
-
-Brag AI uses `pydantic-ai` under the hood, which supports [various AI models](https://ai.pydantic.dev/models/).
-
-To use these models, you'll need to set up API keys as environment variables:
-
-### OpenAI
+If you prefer using `pipx`, you can install Brag AI with:
 
 ```bash
-export OPENAI_API_KEY=your-openai-api-key
+pipx install brag-ai
 ```
 
-### Anthropic
+## Using `pip`
+
+If you prefer using `pip`, you can install Brag AI with:
 
 ```bash
-export ANTHROPIC_API_KEY=your-anthropic-api-key
+pip install brag-ai
 ```
 
-### Google (Gemini)
+However, please note that this will install `brag-ai` into your global Python environment, which might not be what you want.
+Make sure to use a [virtual environment](https://docs.python.org/3/library/venv.html) to install Brag AI if you don't want to have it installed globally.
+
+## Requirements
+
+- Python 3.8 or higher
+- A GitHub account (for accessing repositories)
+- An LLM provider API key (for AI processing)
+
+## Environment Setup
+
+After installation, you'll need to set up your environment:
+
+1. (Optional) Get your GitHub Personal Access Token:
+
+   - Go to GitHub Settings > Developer Settings > Personal Access Tokens
+   - Create a new token with `repo` scope
+   - Save the token securely (e.g. add `GITHUB_API_TOKEN=<your-token>` to a `.env` file)
+   - This step is optional - if you don't provide a GitHub token, the brag document will only include public information
+
+2. Get your LLM provider API key:
+
+   - Sign up for an LLM provider account if you haven't already
+   - Create a new API key
+   - Save the key securely
+
+3. Set up your environment variables:
 
 ```bash
-export GEMINI_API_KEY=your-gemini-api-key
+export GITHUB_API_TOKEN="your-github-token"
+# Then, depending on the LLM provider you're using, set the following environment variables:
+export OPENAI_API_KEY="your-openai-api-key"
+export GEMINI_API_KEY="your-gemini-api-key"
+export ANTHROPIC_API_KEY="your-anthropic-api-key"
 ```
 
-You can set these environment variables in your shell profile or use a `.env` file in your project directory.
+You can also add these to your `.bashrc`, `.zshrc`, or equivalent shell configuration file for persistence.
 
-## GitHub Authentication
+## Verifying Installation
 
-For accessing private GitHub repositories or increasing your rate limit, you can provide a GitHub API token:
+To verify everything is set up correctly:
 
 ```bash
-export GITHUB_API_TOKEN=your-github-api-token
+# Check the installed version
+brag --version
+
+# Run a test command
+brag --help
 ```
 
-You can generate a Personal Access Token from your GitHub account settings. For more information, see GitHub's documentation on [Creating a personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token).
+If you see the help message and version information, you're ready to start using Brag AI!
 
 ## Next Steps
 
-Now that you have Brag AI installed, check out the [Usage Guide](usage.md) to learn how to generate your first brag document!
+- Read the [Usage Guide](usage.md) to learn how to use Brag AI
+- Check out the [Configuration Options](configuration.md) to customize your experience
+- Visit the [API Reference](api-reference.md) for detailed technical information
