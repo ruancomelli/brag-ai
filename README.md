@@ -4,6 +4,8 @@
 
 [![PyPI](https://img.shields.io/pypi/v/brag-ai.svg?logo=pypi&logoColor=white)](https://pypi.org/project/brag-ai)
 [![Python Version](https://img.shields.io/pypi/pyversions/brag-ai.svg?logo=python&logoColor=yellow)](https://python.org)
+[![Docs](https://img.shields.io/badge/docs-latest-blue)](https://ruancomelli.github.io/brag-ai/)
+
 [![uv-managed](https://img.shields.io/badge/managed-261230?label=uv&logo=uv&labelColor=gray)](https://github.com/astral-sh/uv)
 [![CI](https://github.com/ruancomelli/brag-ai/actions/workflows/ci.yaml/badge.svg)](https://github.com/ruancomelli/brag-ai/actions/workflows/ci.yaml)
 [![Codecov](https://codecov.io/gh/ruancomelli/brag-ai/branch/main/graph/badge.svg)](https://codecov.io/gh/ruancomelli/brag-ai)
