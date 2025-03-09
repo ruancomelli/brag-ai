@@ -13,14 +13,36 @@ nav:
 - Installation: installation.md
 - Usage: usage.md
 - Configuration: configuration.md
-- API Reference: api-reference.md
-- Release Notes: release-notes.md
 - External links:
   - GitHub 🔗: https://github.com/ruancomelli/brag-ai
+  - PyPI 🔗: https://pypi.org/project/brag-ai/
 
 plugins:
 - search
 - social
+- api-autonav:
+    modules: [src]
+- mkdocstrings:
+    handlers:
+      python:
+        inventories:
+        - https://docs.python.org/3/objects.inv
+        options:
+          docstring_options:
+            ignore_init_summary: true
+          docstring_section_style: table
+          # docstring_style: "numpy"
+          extensions:
+          - dataclasses
+          filters: ['!^_']
+          # heading_level: 1
+          parameter_headings: true
+          separate_signature: true
+          show_signature_annotations: true
+          show_symbol_type_heading: true
+          show_symbol_type_toc: true
+          signature_crossrefs: true
+          summary: true
 
 theme:
   name: material
