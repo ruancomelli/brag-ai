@@ -11,6 +11,7 @@
 [![Codecov](https://codecov.io/gh/ruancomelli/brag-ai/branch/main/graph/badge.svg)](https://codecov.io/gh/ruancomelli/brag-ai)
 [![Sourcery](https://img.shields.io/badge/Sourcery-enabled-orange?logo=hackthebox&logoColor=orange)](https://sourcery.ai)
 [![Code style: Ruff](https://img.shields.io/badge/Ruff-checked-261230.svg?logo=ruff)](https://docs.astral.sh/ruff/)
+[![Pydantic v2](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/pydantic/pydantic/main/docs/badge/v2.json)](https://pydantic.dev)
 
 [![SemVer](https://img.shields.io/badge/semver-2.0.0-green)](https://semver.org/spec/v2.0.0.html)
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
