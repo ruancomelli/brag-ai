@@ -22,9 +22,9 @@ Generate and maintain a brag document automatically from your GitHub contributio
 Because your awesome work deserves to be remembered! ✨
 
 <h1 align="center">
-<a href="docs/assets/hero.webp">
+<a href="docs/assets/hero.png">
 <img
-  src=docs/assets/hero.webp
+  src=docs/assets/hero.png
   alt="Brag AI Hero"
   width="300"
   align="center"

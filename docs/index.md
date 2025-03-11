@@ -5,7 +5,7 @@ Generate and maintain a brag document automatically from your GitHub contributio
 Because your awesome work deserves to be remembered! ✨
 
 <p align="center">
-<img src="assets/hero.webp" alt="Brag AI Hero" width="300">
+<img src="assets/hero.png" alt="Brag AI Hero" width="300">
 </p>
 
 ## Overview
