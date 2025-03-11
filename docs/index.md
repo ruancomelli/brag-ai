@@ -45,7 +45,7 @@ Head over to the [Installation](installation.md) page for more details on how to
 After installation, you can generate a brag document from a GitHub repository with:
 
 ```console
-brag owner/repo --user github-username
+brag from-repo owner/repo --user github-username
 ```
 
 Check out the [Usage](usage.md) page for more details on how to use `brag-ai`.
