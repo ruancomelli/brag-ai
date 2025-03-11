@@ -73,6 +73,8 @@ If you use [`uv`](https://docs.astral.sh/uv/), you can also install and run this
 uvx --from brag-ai brag owner/repo --user github-username
 ```
 
+The final step is then: ⭐ star [this repo](https://github.com/ruancomelli/brag-ai)!
+
 ## Documentation
 
 For detailed instructions, please refer to the documentation:
