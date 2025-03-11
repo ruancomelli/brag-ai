@@ -31,11 +31,11 @@ plugins:
           docstring_options:
             ignore_init_summary: true
           docstring_section_style: table
-          # docstring_style: "numpy"
+            # docstring_style: "numpy"
           extensions:
           - dataclasses
           filters: ['!^_']
-          # heading_level: 1
+            # heading_level: 1
           parameter_headings: true
           separate_signature: true
           show_signature_annotations: true
@@ -46,8 +46,8 @@ plugins:
 
 theme:
   name: material
-  logo: assets/hero.webp
-  favicon: assets/hero.webp
+  logo: assets/icon.svg
+  favicon: assets/favicon.svg
   palette:
     # Palette toggle for automatic mode
   - media: (prefers-color-scheme)
@@ -55,14 +55,14 @@ theme:
       icon: material/brightness-auto
       name: Switch to light mode
 
-    # Palette toggle for light mode
+      # Palette toggle for light mode
   - media: '(prefers-color-scheme: light)'
     scheme: default
     toggle:
       icon: material/brightness-7
       name: Switch to dark mode
 
-    # Palette toggle for dark mode
+      # Palette toggle for dark mode
   - media: '(prefers-color-scheme: dark)'
     scheme: slate
     toggle:
