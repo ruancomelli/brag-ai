@@ -21,18 +21,16 @@ classifiers = [
 
 requires-python = ">=3.12"
 dependencies = [
-    "asyncer>=0.0.8",
-    "click>=8.1.8",
+    "cyclopts>=3.9.2",
     "loguru>=0.7.3",
     "pydantic>=2.10.6",
     "pydantic-ai>=0.0.24",
     "pygithub>=2.6.0",
     "rich>=13.9.4",
-    "typer>=0.15.1",
 ]
 
 [project.urls]
-# Homepage = "https://example.com"
+Homepage = "https://github.com/ruancomelli/brag-ai"
 Documentation = "https://ruancomelli.github.io/brag-ai/"
 Repository = "https://github.com/ruancomelli/brag-ai.git"
 Issues = "https://github.com/ruancomelli/brag-ai/issues"
@@ -93,6 +91,7 @@ select = [
 ]
 ignore = [
     "D105",    # Missing docstring in magic method
+    "D107",    # Missing docstring in __init__
     "D203",    # incorrect-blank-line-before-class
     "D213",    # multi-line-summary-second-line
     "D413",    # Missing blank line after last section
