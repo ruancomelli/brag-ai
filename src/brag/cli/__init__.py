@@ -4,126 +4,123 @@ This script uses Typer to create a CLI that allows users to generate brag docume
 from their GitHub contributions.
 """
 
-from __future__ import annotations
-
+import json
 import sys
 from datetime import datetime
+from itertools import groupby
 from pathlib import Path
-from typing import Annotated
-from typing import get_args as get_literal_type_args
+from typing import Annotated, Literal
 
-import click
-from asyncer import runnify
+import cyclopts
 from github import Github
 from github.Auth import Token
 from loguru import logger
-from pydantic_ai.models import KnownModelName
-from rich.progress import (
-    MofNCompleteColumn,
-    Progress,
-    SpinnerColumn,
-)
-from typer import Argument, BadParameter, Option, Typer
+from rich.console import Console
+from rich.progress import MofNCompleteColumn, Progress, SpinnerColumn
 
+from brag import __version__
 from brag.agents import generate_brag_document
+from brag.cli.self import app as self_app
 from brag.github_commits import GithubCommits, format_commit_as_context
-from brag.repository import RepoReference
+from brag.models import AVAILABLE_MODELS, AvailableModelFullName
+from brag.repository import RepoFullName, RepoReference
 
-app = Typer(
-    rich_markup_mode="rich",
+app = cyclopts.App(
+    console=Console(),
     help=(
         "Generate and maintain a brag document automatically from your GitHub contributions,"
         " powered by AI."
     ),
-    no_args_is_help=True,
+    version=__version__,
+    version_flags=("--version", "-V"),
+    config=cyclopts.config.Env(prefix="BRAG_", command=False),
+    # TODO: check how to migrate the following options to `cyclopts`
+    # rich_markup_mode="rich",
+    # no_args_is_help=True,
 )
+app.command(self_app)
+
+inputs_group = cyclopts.Group("Inputs")
+outputs_group = cyclopts.Group("Outputs")
+model_group = cyclopts.Group("Model")
 
 
-@app.command()
-# Runnify is required to use async functions with Typer (because Typer is not async)
-@runnify
+@app.command
 async def from_repo(
-    repo: Annotated[
-        RepoReference,
-        Argument(
+    repo_full_name: Annotated[
+        RepoFullName,
+        cyclopts.Parameter(
+            name="--repo",
             help="The repository to generate the brag document for. Format: `owner/repo`",
-            rich_help_panel="Inputs",
-            parser=RepoReference.from_repo_full_name,
+            group=inputs_group,
         ),
     ],
     user_login: Annotated[
         str | None,
-        Option(
-            "-u",
-            "--user",
+        cyclopts.Parameter(
+            name=("-u", "--user"),
             help=(
                 "The user to generate the brag document for."
                 " If not provided, the owner of the GitHub API token will be used."
             ),
-            rich_help_panel="Inputs",
+            group=inputs_group,
         ),
     ] = None,
     from_date: Annotated[
         datetime | None,
-        Option(
-            "--from",
+        cyclopts.Parameter(
+            name="--from",
             help="The start date to generate the brag document for",
-            rich_help_panel="Inputs",
+            group=inputs_group,
         ),
     ] = None,
     to_date: Annotated[
         datetime | None,
-        Option(
-            "--to",
+        cyclopts.Parameter(
+            name="--to",
             help="The end date to generate the brag document for",
-            rich_help_panel="Inputs",
+            group=inputs_group,
         ),
     ] = None,
     limit: Annotated[
         int | None,
-        Option(
+        cyclopts.Parameter(
             help="The maximum number of commits to include in the brag document",
-            rich_help_panel="Inputs",
+            group=inputs_group,
         ),
     ] = None,
     github_api_token: Annotated[
         str | None,
-        Option(
-            "--github-api-token",
+        cyclopts.Parameter(
             help=(
                 "The GitHub token to use to fetch information from GitHub."
                 " If not provided, the brag document will only include public information."
             ),
-            envvar="GITHUB_API_TOKEN",
-            rich_help_panel="Inputs",
+            group=inputs_group,
         ),
     ] = None,
     output: Annotated[
         Path | None,
-        Option(
-            "-o",
-            "--output",
+        cyclopts.Parameter(
+            name=("-o", "--output"),
             help="Path to save the commit history. Outputs Markdown-formatted text to stdout if not specified.",
-            rich_help_panel="Outputs",
+            group=outputs_group,
         ),
     ] = None,
     overwrite: Annotated[
         bool,
-        Option(
-            "--overwrite",
+        cyclopts.Parameter(
+            name="--overwrite",
             help="If set, overwrites the output file if it already exists.",
-            rich_help_panel="Outputs",
+            group=outputs_group,
         ),
     ] = False,
     model_name: Annotated[
-        KnownModelName,
-        Option(
-            "--model",
+        AvailableModelFullName,
+        cyclopts.Parameter(
+            name="--model",
             help="The name of the model to use for generating the brag document.",
-            rich_help_panel="Model",
-            # Workaround since `typer` does not currently support `Literal` types
-            # See https://github.com/fastapi/typer/pull/429#issuecomment-2491043848
-            click_type=click.Choice(get_literal_type_args(KnownModelName)),
+            group=model_group,
         ),
     ] = (
         # TODO: experiment with other models to pick the best default
@@ -131,10 +128,10 @@ async def from_repo(
     ),
     language: Annotated[
         str,
-        Option(
+        cyclopts.Parameter(
             "--language",
             help="The language to use for generating the brag document.",
-            rich_help_panel="Model",
+            group=model_group,
         ),
     ] = "english",
 ) -> None:
@@ -149,18 +146,20 @@ async def from_repo(
         )
 
     if not user_login and not github_api_token:
-        raise BadParameter("Either `user` or `github_api_token` must be provided")
+        raise ValueError("Either `user` or `github_api_token` must be provided")
 
     logger.info(
         (
             "Generating brag document from {repo_full_name} for {user_login}"
             "{from_date}{to_date}"
         ),
-        repo_full_name=repo.full_name,
+        repo_full_name=repo_full_name,
         user_login=user_login,
         from_date=f" from {from_date}" if from_date else "",
         to_date=f" to {to_date}" if to_date else "",
     )
+
+    repo = RepoReference.from_repo_full_name(repo_full_name)
 
     with Github(auth=Token(github_api_token) if github_api_token else None) as g:
         if not user_login:
@@ -196,3 +195,47 @@ async def from_repo(
     # Open the output file if specified, otherwise use stdout
     with open(output, "w") if output else sys.stdout as f:
         f.write(brag_document)
+
+
+@app.command(
+    name=(
+        "list-models",
+        "ls-models",
+    )
+)
+def list_models(
+    format: Annotated[
+        Literal["text", "json"],
+        cyclopts.Parameter(
+            help="The format to use for the output.",
+        ),
+    ] = "text",
+) -> None:
+    """List all available models."""
+    all_models = tuple(
+        sorted(
+            AVAILABLE_MODELS,
+            key=lambda model: model.full_name,
+        )
+    )
+
+    match format:
+        case "text":
+            grouped_models = groupby(all_models, key=lambda model: model.provider)
+            for provider, models in grouped_models:
+                print(f"{provider}:")
+                for model in models:
+                    print(f"  {model.name}")
+        case "json":
+            print(
+                json.dumps(
+                    [
+                        {
+                            "provider": model.provider,
+                            "name": model.name,
+                            "full_name": model.full_name,
+                        }
+                        for model in all_models
+                    ]
+                )
+            )
