@@ -64,13 +64,13 @@ uv tool install brag-ai
 # pip install brag-ai
 
 # Generate a brag document from a GitHub repository
-brag owner/repo --user github-username
+brag from-repo owner/repo --user github-username
 ```
 
 If you use [`uv`](https://docs.astral.sh/uv/), you can also install and run this tool in one go using the `uvx` tool:
 
 ```console
-uvx --from brag-ai brag owner/repo --user github-username
+uvx --from brag-ai brag from-repo owner/repo --user github-username
 ```
 
 The final step is then: ⭐ star [this repo](https://github.com/ruancomelli/brag-ai)!

@@ -97,18 +97,18 @@ If not specified, Brag AI uses the following default values:
 
 ```bash
 export OPENAI_API_KEY=your-openai-api-key
-brag owner/repo --user github-username --from 2023-01-01 --to 2023-12-31 --model openai:gpt-4o
+brag from-repo owner/repo --user github-username --from 2023-01-01 --to 2023-12-31 --model openai:gpt-4o
 ```
 
 ### Generate a brag document in Portuguese using Claude
 
 ```bash
 export ANTHROPIC_API_KEY=your-anthropic-api-key
-brag owner/repo --user github-username --language Português --model anthropic:claude-3-5-sonnet-latest
+brag from-repo owner/repo --user github-username --language Português --model anthropic:claude-3-5-sonnet-latest
 ```
 
 ### Save the brag document to a file and limit to the last 50 commits
 
 ```bash
-brag owner/repo --user github-username --limit 50 --output brag.md
+brag from-repo owner/repo --user github-username --limit 50 --output brag.md
 ```
