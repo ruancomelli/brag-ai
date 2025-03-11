@@ -21,7 +21,7 @@ Generate and maintain a brag document automatically from your GitHub contributio
 
 Because your awesome work deserves to be remembered! ✨
 
-<h1 align="center">
+<p align="center">
 <a href="docs/assets/hero.png">
 <img
   src=docs/assets/hero.png
@@ -30,7 +30,7 @@ Because your awesome work deserves to be remembered! ✨
   align="center"
 >
 </a>
-</h1>
+</p>
 
 ## Overview
 
