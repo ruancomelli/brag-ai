@@ -59,8 +59,8 @@ def batch_chunks_by_token_limit(
             current_batch_tokens + chunk_tokens > max_tokens_per_batch
         ):
             yield current_batch
-            current_batch = ""
-            current_batch_tokens = 0
+            current_batch = chunk
+            current_batch_tokens = chunk_tokens
         else:
             current_batch = promptify(current_batch, chunk, joiner=joiner)
             current_batch_tokens += chunk_tokens
