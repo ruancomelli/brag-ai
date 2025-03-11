@@ -5,9 +5,8 @@ from different providers. It includes utilities for parsing model names,
 validating them, and accessing available models.
 """
 
-import math
 from collections.abc import Iterator
-from typing import Final, Literal, Self, assert_never
+from typing import Final, Self
 from typing import get_args as get_literal_type_args
 
 from pydantic import BaseModel, ConfigDict
@@ -179,7 +178,7 @@ def _iter_available_models() -> Iterator[Model]:
 
     Skips models with invalid provider names or unknown context window sizes.
     """
-    known_models = get_literal_type_args(AvailableModelFullName)
+    known_models = get_literal_type_args(_KnownModelName)
     for model_name in known_models:
         try:
             yield Model.from_full_name(model_name)
@@ -194,26 +193,5 @@ def _iter_available_models() -> Iterator[Model]:
 
 AVAILABLE_MODELS = frozenset(_iter_available_models())
 """Frozen set of all available and valid AI models."""
-
-
-def estimate_token_count(
-    text: str,
-    approximation_mode: Literal["underestimate", "overestimate"] = "overestimate",
-) -> int:
-    """Estimate the number of tokens in a text using the model's context window size.
-
-    This is a rough estimate and should only be used for rough comparisons.
-
-    Args:
-        text: The text to estimate the token count of.
-        approximation_mode: The mode to use for the approximation.
-            - "underestimate": Underestimate the token count. Useful to be conservative when avoiding hitting the context window limit.
-            - "overestimate": Overestimate the token count. Useful to be generous when estimating the maximum number of tokens that can be used.
-    """
-    match approximation_mode:
-        case "underestimate":
-            return math.floor(len(text) / 5)
-        case "overestimate":
-            return math.ceil(len(text) / 3)
-        case never:
-            assert_never(never)
+AVAILABLE_MODEL_FULL_NAMES = frozenset(model.full_name for model in AVAILABLE_MODELS)
+"""Frozen set of all available and valid AI model full names."""

@@ -20,10 +20,19 @@ from rich.progress import MofNCompleteColumn, Progress, SpinnerColumn
 
 from brag import __version__
 from brag.agents import generate_brag_document
+from brag.batching import batch_chunks_by_token_limit
 from brag.cli.self import app as self_app
 from brag.github_commits import GithubCommits, format_commit_as_context
-from brag.models import AVAILABLE_MODELS, AvailableModelFullName
+from brag.models import (
+    AVAILABLE_MODEL_FULL_NAMES,
+    AVAILABLE_MODELS,
+    AvailableModelFullName,
+    Model,
+    _iter_available_models,
+)
 from brag.repository import RepoFullName, RepoReference
+
+COMMIT_BATCH_JOINER = "\n\n---\n\n"
 
 app = cyclopts.App(
     console=Console(),
@@ -119,13 +128,14 @@ async def from_repo(
         AvailableModelFullName,
         cyclopts.Parameter(
             name="--model",
-            help="The name of the model to use for generating the brag document.",
+            help=(
+                "The name of the model to use for generating the brag document."
+                " See `brag list-models` for the list of available models."
+            ),
             group=model_group,
+            show_choices=False,
         ),
-    ] = (
-        # TODO: experiment with other models to pick the best default
-        "google-vertex:gemini-2.0-flash"
-    ),
+    ] = "google-gla:gemini-2.0-flash",
     language: Annotated[
         str,
         cyclopts.Parameter(
@@ -134,11 +144,30 @@ async def from_repo(
             group=model_group,
         ),
     ] = "english",
+    buffer_percentage: Annotated[
+        float,
+        cyclopts.Parameter(
+            help=(
+                "The percentage of the model's context window to reserve as a buffer when batching commits."
+                " Higher values (e.g., 0.3) are more conservative, while lower values (e.g., 0.1) allow for more chunks per batch but increase the risk of accidentally exceeding the limit."
+            ),
+            group=model_group,
+        ),
+    ] = 0.2,
 ) -> None:
     """Generate a brag document from a GitHub repository.
 
     This command fetches commits from a specified GitHub repository for a given user,
     and then uses an AI model to generate a brag document summarizing those contributions.
+
+    To optimize performance and avoid rate limiting issues, commits are batched together
+    into larger chunks that fit within the model's context window. This significantly
+    reduces the number of API calls to the LLM provider for repositories with many commits.
+
+    The batching process uses token count estimation to determine how many commits
+    can be combined safely. The `--buffer-percentage` parameter allows you to control
+    how conservative this batching should be by reserving a portion of the model's
+    context window as a safety buffer.
     """
     if output is not None and output.exists() and not overwrite:
         raise FileExistsError(
@@ -147,6 +176,13 @@ async def from_repo(
 
     if not user_login and not github_api_token:
         raise ValueError("Either `user` or `github_api_token` must be provided")
+
+    if model_name not in AVAILABLE_MODEL_FULL_NAMES:
+        raise ValueError(
+            f"Model `{model_name}` is not available. See `brag list-models` for the list of available models."
+        )
+
+    model = Model.from_full_name(model_name)
 
     logger.info(
         (
@@ -174,7 +210,31 @@ async def from_repo(
             limit=limit,
         )
         commits_count = len(commits)
+
+        logger.info(
+            "Processing {commits_count} commits for {user_login} in {repo}",
+            commits_count=commits_count,
+            user_login=user_login,
+            repo=repo.full_name,
+        )
+
         context_chunks = map(format_commit_as_context, commits)
+
+        # Batch chunks to respect rate limits
+        batched_chunks = tuple(
+            batch_chunks_by_token_limit(
+                context_chunks,
+                model,
+                buffer_percentage=buffer_percentage,
+                joiner=COMMIT_BATCH_JOINER,
+            )
+        )
+
+        logger.info(
+            "Batched {total_commits} commits into {batch_count} batches for more efficient processing",
+            total_commits=commits_count,
+            batch_count=len(batched_chunks),
+        )
 
         with Progress(
             SpinnerColumn(),
@@ -185,10 +245,7 @@ async def from_repo(
         ) as progress:
             brag_document = await generate_brag_document(
                 model_name,
-                progress.track(
-                    context_chunks,
-                    total=commits_count,
-                ),
+                progress.track(batched_chunks),
                 language=language,
             )
 
