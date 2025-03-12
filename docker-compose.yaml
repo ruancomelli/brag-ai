@@ -1,0 +1,16 @@
+services:
+  brag-ai:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: brag-ai
+    volumes:
+    - ~/.gitconfig:/root/.gitconfig:ro
+    - brag-data:/app/data
+
+    environment:
+    - GITHUB_API_TOKEN=${GITHUB_API_TOKEN}
+    - OPENAI_API_KEY=${OPENAI_API_KEY}
+
+volumes:
+  brag-data:
