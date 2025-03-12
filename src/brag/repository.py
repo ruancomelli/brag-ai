@@ -9,6 +9,13 @@ type RepoFullName = Annotated[
     StringConstraints(pattern=r"^[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+$"),
 ]
 
+type GitHubRepoURL = Annotated[
+    str,
+    StringConstraints(
+        pattern=r"^https?://github\.com/[a-zA-Z0-9_-]+/[a-zA-Z0-9_-]+(?:\.git)?$"
+    ),
+]
+
 
 class RepoReference(BaseModel):
     """A reference to a repository on a code hosting platform.
@@ -38,3 +45,20 @@ class RepoReference(BaseModel):
         """
         owner, name = repo_full_name.split("/")
         return cls(owner=owner, name=name)
+
+    @classmethod
+    def from_github_repo_url(cls, github_repo_url: GitHubRepoURL) -> Self:
+        """Create a RepoReference object from a GitHub repository URL.
+
+        Args:
+            github_repo_url: A GitHub repository URL.
+
+        Returns:
+            A RepoReference object.
+        """
+        repo_full_name = (
+            github_repo_url.removesuffix(".git")
+            .removeprefix("https://github.com/")
+            .removeprefix("http://github.com/")
+        )
+        return cls.from_repo_full_name(repo_full_name)
