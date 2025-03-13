@@ -30,10 +30,7 @@ from brag.models import (
 from brag.repository import GitHubRepoURL, RepoFullName, RepoReference
 from brag.sources import DataSource
 from brag.sources.git_commits import GitCommit, GitCommitsSource
-from brag.sources.github_commits import (
-    FormattedGithubCommit,
-    GithubCommitsSource,
-)
+from brag.sources.github_commits import FormattedGithubCommit, GithubCommitsSource
 
 COMMIT_BATCH_JOINER = "\n\n---\n\n"
 
