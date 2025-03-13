@@ -8,8 +8,8 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Install uv package manager
-RUN pip install --no-cache-dir uv
+# Install uv package manager (pinned version for reproducible builds)
+RUN pip install --no-cache-dir uv==1.0.0
 
 # Copy project files
 COPY . .
