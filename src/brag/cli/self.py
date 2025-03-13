@@ -25,12 +25,18 @@ def upgrade() -> None:
         (sys.executable, "-m", "pip", "install", "--upgrade", "brag-ai")
     )
 
-    res = subprocess.run(
-        (sys.executable, "-m", "brag", "--version"),
-        stdout=subprocess.PIPE,
-        check=True,
+    new_version = (
+        subprocess.check_output(
+            (
+                sys.executable,
+                "-m",
+                "brag",
+                "--version",
+            )
+        )
+        .decode()
+        .strip()
     )
-    new_version = res.stdout.decode().strip()
 
     if old_version != new_version:
         print(f"`brag-ai` updated from v{old_version} to v{new_version}.")
