@@ -54,7 +54,7 @@ model_group = cyclopts.Group("Model")
 
 
 @app.command
-async def from_repo(
+async def from_repo(  # noqa: PLR0912 # Ignore this for now - we need to refactor the command to simplify the code
     repo_full_name: Annotated[
         RepoFullName | GitHubRepoURL,
         cyclopts.Parameter(
@@ -97,6 +97,28 @@ async def from_repo(
             group=inputs_group,
         ),
     ] = None,
+    input_brag_document_path: Annotated[
+        Path | None,
+        cyclopts.Parameter(
+            name=("-i", "--input"),
+            help=(
+                "Path to an existing brag document to update with new contributions."
+                " If not provided, a new brag document will be generated from scratch."
+            ),
+            group=inputs_group,
+        ),
+    ] = None,
+    on_missing_input_brag_document: Annotated[
+        Literal["error", "ignore"],
+        cyclopts.Parameter(
+            name="--on-missing-input",
+            help=(
+                "What to do if the input brag document does not exist."
+                " If set to `error`, the command will raise an error."
+                " If set to `ignore`, the command will generate a new brag document from scratch."
+            ),
+        ),
+    ] = "error",
     github_api_token: Annotated[
         str | None,
         cyclopts.Parameter(
@@ -115,14 +137,18 @@ async def from_repo(
             group=outputs_group,
         ),
     ] = None,
-    overwrite: Annotated[
-        bool,
+    on_existing_output: Annotated[
+        Literal["error", "overwrite"],
         cyclopts.Parameter(
-            name="--overwrite",
-            help="If set, overwrites the output file if it already exists.",
+            name="--on-existing-output",
+            help=(
+                "What to do if the output file already exists."
+                " If set to `error`, the command will raise an error."
+                " If set to `overwrite`, the command will overwrite the output file."
+            ),
             group=outputs_group,
         ),
-    ] = False,
+    ] = "error",
     model_name: Annotated[
         AvailableModelFullName,
         cyclopts.Parameter(
@@ -159,6 +185,10 @@ async def from_repo(
     This command fetches commits from a specified GitHub repository for a given user,
     and then uses an AI model to generate a brag document summarizing those contributions.
 
+    If an existing brag document is provided via the ``--input`` parameter, the command
+    will update that document with new contributions instead of generating a completely new one.
+    This is useful for incrementally building a brag document over time.
+
     To optimize performance and avoid rate limiting issues, commits are batched together
     into larger chunks that fit within the model's context window. This significantly
     reduces the number of API calls to the LLM provider for repositories with many commits.
@@ -168,9 +198,9 @@ async def from_repo(
     how conservative this batching should be by reserving a portion of the model's
     context window as a safety buffer.
     """
-    if output is not None and output.exists() and not overwrite:
+    if output is not None and output.exists() and on_existing_output == "error":
         raise FileExistsError(
-            f"Output file `{output}` already exists. Use `--overwrite` to overwrite."
+            f"Output file `{output}` already exists. Use `--on-existing-output overwrite` to overwrite."
         )
 
     if not author and not github_api_token:
@@ -184,7 +214,7 @@ async def from_repo(
     model = Model.from_full_name(model_name)
 
     logger.info(
-        ("Generating brag document from {repo} for {author}{from_date}{to_date}"),
+        "Generating brag document from {repo} for {author}{from_date}{to_date}",
         repo=repo_full_name,
         author=author,
         from_date=f" from {from_date}" if from_date else "",
@@ -248,6 +278,22 @@ async def from_repo(
         ),
     )
 
+    # Read existing brag document if provided
+    input_brag_document: str | None = None
+    if input_brag_document_path:
+        try:
+            input_brag_document = input_brag_document_path.read_text()
+        except FileNotFoundError:
+            if on_missing_input_brag_document == "error":
+                raise FileNotFoundError(
+                    f"Input brag document `{input_brag_document_path}` does not exist."
+                )
+            else:
+                logger.warning(
+                    "Input brag document `{path}` does not exist. Generating new brag document.",
+                    path=input_brag_document_path,
+                )
+
     with Progress(
         SpinnerColumn(),
         "[progress.description]Processing GitHub commits",
@@ -259,6 +305,7 @@ async def from_repo(
             model_name,
             progress.track(batched_chunks),
             language=language,
+            input_brag_document=input_brag_document,
         )
 
     # Open the output file if specified, otherwise use stdout
@@ -308,6 +355,28 @@ async def from_local(
             group=inputs_group,
         ),
     ] = None,
+    input_brag_document_path: Annotated[
+        Path | None,
+        cyclopts.Parameter(
+            name=("-i", "--input"),
+            help=(
+                "Path to an existing brag document to update with new contributions."
+                " If not provided, a new brag document will be generated from scratch."
+            ),
+            group=inputs_group,
+        ),
+    ] = None,
+    on_missing_input_brag_document: Annotated[
+        Literal["error", "ignore"],
+        cyclopts.Parameter(
+            name="--on-missing-input",
+            help=(
+                "What to do if the input brag document does not exist."
+                " If set to `error`, the command will raise an error."
+                " If set to `ignore`, the command will generate a new brag document from scratch."
+            ),
+        ),
+    ] = "error",
     output: Annotated[
         Path | None,
         cyclopts.Parameter(
@@ -316,14 +385,18 @@ async def from_local(
             group=outputs_group,
         ),
     ] = None,
-    overwrite: Annotated[
-        bool,
+    on_existing_output: Annotated[
+        Literal["error", "overwrite"],
         cyclopts.Parameter(
-            name="--overwrite",
-            help="If set, overwrites the output file if it already exists.",
+            name="--on-existing-output",
+            help=(
+                "What to do if the output file already exists."
+                " If set to `error`, the command will raise an error."
+                " If set to `overwrite`, the command will overwrite the output file."
+            ),
             group=outputs_group,
         ),
-    ] = False,
+    ] = "error",
     model_name: Annotated[
         AvailableModelFullName,
         cyclopts.Parameter(
@@ -361,6 +434,10 @@ async def from_local(
     and then uses an AI model to generate a comprehensive brag document summarizing
     the user's contributions.
 
+    If an existing brag document is provided via the ``--input`` parameter, the command
+    will update that document with new contributions instead of generating a completely new one.
+    This is useful for incrementally building a brag document over time.
+
     Unlike the ``from-repo`` command which works with GitHub repositories, this command
     operates directly on a local Git repository and doesn't require a GitHub API token.
     This is useful for private repositories or repositories hosted on platforms other
@@ -379,9 +456,9 @@ async def from_local(
     how conservative this batching should be by reserving a portion of the model's
     context window as a safety buffer.
     """
-    if output is not None and output.exists() and not overwrite:
+    if output is not None and output.exists() and on_existing_output == "error":
         raise FileExistsError(
-            f"Output file `{output}` already exists. Use `--overwrite` to overwrite."
+            f"Output file `{output}` already exists. Use `--on-existing-output overwrite` to overwrite."
         )
 
     if model_name not in AVAILABLE_MODEL_FULL_NAMES:
@@ -447,6 +524,21 @@ async def from_local(
         ),
     )
 
+    input_brag_document: str | None = None
+    if input_brag_document_path:
+        try:
+            input_brag_document = input_brag_document_path.read_text()
+        except FileNotFoundError:
+            if on_missing_input_brag_document == "error":
+                raise FileNotFoundError(
+                    f"Input brag document `{input_brag_document_path}` does not exist."
+                )
+            else:
+                logger.warning(
+                    "Input brag document `{path}` does not exist. Generating new brag document.",
+                    path=input_brag_document_path,
+                )
+
     with Progress(
         SpinnerColumn(),
         "[progress.description]Processing commits",
@@ -458,6 +550,7 @@ async def from_local(
             model_name,
             progress.track(batched_chunks),
             language=language,
+            input_brag_document=input_brag_document,
         )
 
     # Open the output file if specified, otherwise use stdout
