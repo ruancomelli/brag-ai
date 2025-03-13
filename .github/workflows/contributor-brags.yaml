@@ -1,0 +1,98 @@
+name: Update Contributor Brag Documents
+
+on:
+  # Run when PRs are merged to main
+  push:
+    branches:
+    - main
+
+  # Allow manual triggering with optional username parameter
+  workflow_dispatch:
+    inputs:
+      username:
+        description: GitHub username to generate/update brag document for
+        required: false
+        type: string
+
+jobs:
+  update-brag-document:
+    name: Update Contributor Brag Document
+    runs-on: ubuntu-latest
+    environment: dogfood
+    permissions:
+      contents: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0   # Fetch all history for accurate contribution data
+
+    - name: Set up Python
+      uses: astral-sh/setup-uv@v5
+      with:
+        enable-cache: true
+
+    - name: Install brag-ai
+      run: uv sync
+
+    - name: Create contributors directory
+      run: mkdir -p examples/contributors
+
+    - name: Determine contributor to update
+      id: determine-contributor
+      run: |
+        # If username is provided via workflow_dispatch, use it
+        if [ -n "${{ github.event.inputs.username }}" ]; then
+          echo "contributor=${{ github.event.inputs.username }}" >> "${GITHUB_OUTPUT}"
+          echo "Using provided username: ${{ github.event.inputs.username }}"
+          exit 0
+        fi
+
+        pusher="${{ github.event.pusher.name }}"
+
+        if [ "${pusher}" = "${{ github.repository_owner }}" ]; then
+          echo "Skipping update for ${pusher} (repository owner pushing commits)"
+          echo "contributor=''" >> "${GITHUB_OUTPUT}"
+        else
+          echo "Updating brag document for ${pusher}"
+          echo "contributor=${pusher}" >> "${GITHUB_OUTPUT}"
+        fi
+
+    - name: Generate brag document for specific contributor
+      if: steps.determine-contributor.outputs.contributor != ''
+      env:
+        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      run: |
+        contributor="${{ steps.determine-contributor.outputs.contributor }}"
+        echo "Generating brag document for $contributor"
+
+        # File path for this contributor's brag document
+        brag_file="examples/contributors/${contributor}.md"
+        brag from-repo \
+          --repo "${{ github.repository }}" \
+          --user "$contributor" \
+          --output "$brag_file" \
+          --on-existing-output overwrite \
+          --input "$brag_file" \
+          --on-missing-input ignore
+
+        echo "Brag document generated for $contributor and saved to $brag_file"
+
+    - name: Commit changes
+      if: steps.determine-contributor.outputs.contributor != ''
+      run: |
+        git config --global user.name ${{ github.actor }}
+        git config --global user.email ${{ github.actor }}@users.noreply.github.com
+        git remote set-url --push origin "https://${{ github.actor }}:${{ secrets.MAIN_BRANCH_PROTECTION_BYPASS_PAT }}@github.com/${{ github.repository }}"
+
+        git add examples/contributors/
+
+        # Only commit if there are changes
+        if git diff --staged --quiet; then
+          echo "No changes to commit"
+        else
+          contributor="${{ steps.determine-contributor.outputs.contributor }}"
+          git commit -m "chore(examples/contributors): update brag document for $contributor"
+          git push origin main
+        fi
