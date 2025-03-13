@@ -101,7 +101,8 @@ venv.bak/
 .idea/
 
 # mkdocs documentation
-/site
+site/
+docs/
 
 # Type checking
 .mypy_cache/
@@ -115,11 +116,6 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
-
-# Docker specific
-Dockerfile
-docker-compose.yaml
-.dockerignore
 
 # User data - we don't want to include this in the image
 data/
