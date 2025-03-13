@@ -22,7 +22,7 @@ def upgrade() -> None:
     old_version = CURRENT_BRAG_VERSION
 
     subprocess.check_output(
-        (sys.executable, "-m", "pip", "install", "--upgrade", "brag")
+        (sys.executable, "-m", "pip", "install", "--upgrade", "brag-ai")
     )
 
     res = subprocess.run(
