@@ -50,6 +50,7 @@ Perfect for:
 - 🔍 **GitHub Integration**: Automagically analyzes your commits to generate achievement descriptions
 - 🏠 **Local Repository Support**: Generate brag documents from local Git repositories
 - 🤖 **AI-Powered**: Turns "fix: bug in login" into "Enhanced system reliability by resolving critical authentication issues"
+- 📝 **Incremental Updates**: Update existing brag documents with new contributions over time
 - 💻 **CLI Tool**: Easy to use command-line interface
 
 ## Quick Start
@@ -65,7 +66,16 @@ uv tool install brag-ai
 # pip install brag-ai
 
 # Generate a brag document from a GitHub repository
-brag from-repo owner/repo --user github-username
+brag from-repo \
+  --repo owner/repo \
+  --user github-username
+
+# Update an existing brag document with new contributions saving the output to a new file
+brag from-repo \
+  --repo owner/repo \
+  --user github-username \
+  --input existing-brag.md \
+  --output updated-brag.md
 ```
 
 If you use [`uv`](https://docs.astral.sh/uv/), you can also install and run this tool in one go using the `uvx` tool:
