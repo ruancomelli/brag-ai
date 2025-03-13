@@ -47,6 +47,7 @@ Perfect for:
 ## Features
 
 - 🔍 **GitHub Integration**: Automagically analyzes your commits to generate achievement descriptions
+- 🏠 **Local Repository Support**: Generate brag documents from local Git repositories
 - 🤖 **AI-Powered**: Turns "fix: bug in login" into "Enhanced system reliability by resolving critical authentication issues"
 - 💻 **CLI Tool**: Easy to use command-line interface
 
