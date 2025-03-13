@@ -262,8 +262,10 @@ async def from_repo(
         )
 
     # Open the output file if specified, otherwise use stdout
-    with open(output, "w") if output else sys.stdout as f:
-        f.write(brag_document)
+    if output:
+        output.write_text(brag_document)
+    else:
+        print(brag_document)
 
 
 @app.command
@@ -450,8 +452,10 @@ async def from_local(
         )
 
     # Open the output file if specified, otherwise use stdout
-    with open(output, "w") if output else sys.stdout as f:
-        f.write(brag_document)
+    if output:
+        output.write_text(brag_document)
+    else:
+        print(brag_document)
 
 
 @app.command(
