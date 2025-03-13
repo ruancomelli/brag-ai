@@ -5,7 +5,6 @@ from their GitHub contributions.
 """
 
 import json
-import sys
 from datetime import datetime
 from itertools import groupby
 from pathlib import Path
@@ -60,7 +59,7 @@ async def from_repo(
         RepoFullName | GitHubRepoURL,
         cyclopts.Parameter(
             name="--repo",
-            help="The repository to generate the brag document for. Format: `owner/repo` or a GitHub URL",
+            help="The repository to generate the brag document for. Format: ``owner/repo`` or a GitHub URL",
             group=inputs_group,
         ),
     ],
@@ -130,7 +129,7 @@ async def from_repo(
             name="--model",
             help=(
                 "The name of the model to use for generating the brag document."
-                " See `brag list-models` for the list of available models."
+                " See ``brag list-models`` for the list of available models."
             ),
             group=model_group,
             show_choices=False,
@@ -165,7 +164,7 @@ async def from_repo(
     reduces the number of API calls to the LLM provider for repositories with many commits.
 
     The batching process uses token count estimation to determine how many commits
-    can be combined safely. The `--buffer-percentage` parameter allows you to control
+    can be combined safely. The ``--buffer-percentage`` parameter allows you to control
     how conservative this batching should be by reserving a portion of the model's
     context window as a safety buffer.
     """
@@ -331,7 +330,7 @@ async def from_local(
             name="--model",
             help=(
                 "The name of the model to use for generating the brag document."
-                " See `brag list-models` for the list of available models."
+                " See ``brag list-models`` for the list of available models."
             ),
             group=model_group,
             show_choices=False,
@@ -362,7 +361,7 @@ async def from_local(
     and then uses an AI model to generate a comprehensive brag document summarizing
     the user's contributions.
 
-    Unlike the `from-repo` command which works with GitHub repositories, this command
+    Unlike the ``from-repo`` command which works with GitHub repositories, this command
     operates directly on a local Git repository and doesn't require a GitHub API token.
     This is useful for private repositories or repositories hosted on platforms other
     than GitHub.
@@ -376,7 +375,7 @@ async def from_local(
     reduces the number of API calls to the LLM provider for repositories with many commits.
 
     The batching process uses token count estimation to determine how many commits
-    can be combined safely. The `--buffer-percentage` parameter allows you to control
+    can be combined safely. The ``--buffer-percentage`` parameter allows you to control
     how conservative this batching should be by reserving a portion of the model's
     context window as a safety buffer.
     """
