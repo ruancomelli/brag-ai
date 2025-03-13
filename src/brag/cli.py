@@ -356,11 +356,20 @@ async def from_local(
         ),
     ] = 0.2,
 ) -> None:
-    """Generate a brag document from a local repository.
+    """Generate a brag document from a local Git repository.
 
-    This command can fetch commits from a local Git repository by providing a path to the repository
+    This command analyzes commits from a local Git repository specified by path,
+    and then uses an AI model to generate a comprehensive brag document summarizing
+    the user's contributions.
 
-    It then uses an AI model to generate a brag document summarizing those contributions.
+    Unlike the `from-repo` command which works with GitHub repositories, this command
+    operates directly on a local Git repository and doesn't require a GitHub API token.
+    This is useful for private repositories or repositories hosted on platforms other
+    than GitHub.
+
+    The command supports filtering commits by author, date range, and limiting the
+    number of commits to process. The generated brag document is formatted in Markdown
+    and can be saved to a file or printed to stdout.
 
     To optimize performance and avoid rate limiting issues, commits are batched together
     into larger chunks that fit within the model's context window. This significantly
