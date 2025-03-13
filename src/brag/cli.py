@@ -5,7 +5,6 @@ from their GitHub contributions.
 """
 
 import json
-import sys
 from datetime import datetime
 from itertools import groupby
 from pathlib import Path
@@ -21,14 +20,12 @@ from rich.progress import MofNCompleteColumn, Progress, SpinnerColumn
 from brag import __version__
 from brag.agents import generate_brag_document
 from brag.batching import batch_chunks_by_token_limit
-from brag.cli.self import app as self_app
 from brag.github_commits import GithubCommits, format_commit_as_context
 from brag.models import (
     AVAILABLE_MODEL_FULL_NAMES,
     AVAILABLE_MODELS,
     AvailableModelFullName,
     Model,
-    _iter_available_models,
 )
 from brag.repository import RepoFullName, RepoReference
 
@@ -47,7 +44,6 @@ app = cyclopts.App(
     # rich_markup_mode="rich",
     # no_args_is_help=True,
 )
-app.command(self_app)
 
 inputs_group = cyclopts.Group("Inputs")
 outputs_group = cyclopts.Group("Outputs")
