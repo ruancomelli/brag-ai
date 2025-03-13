@@ -38,15 +38,13 @@ class GitCommitsSource(DataSource[GitCommit]):
     to_date: datetime | None = None
 
     def __iter__(self) -> Iterator[GitCommit]:
-        return iter(self._commits)
+        return (self._repo.git.show(commit) for commit in self._commit_shas)
 
     def __len__(self) -> int:
-        return len(self._commits)
+        return len(self._commit_shas)
 
     @cached_property
-    def _commits(self) -> tuple[GitCommit, ...]:
-        repo = Repo(self.path)
-
+    def _commit_shas(self) -> tuple[GitCommit, ...]:
         # Build kwargs for filtering commits
         kwargs: dict[str, Any] = {"author": self.author}
 
@@ -57,8 +55,9 @@ class GitCommitsSource(DataSource[GitCommit]):
             kwargs["until"] = self.to_date
 
         # Get commits for the specified author
-        commits_iter = repo.iter_commits(**kwargs)
+        commits_iter = self._repo.iter_commits(**kwargs)
+        return tuple(commit.hexsha for commit in commits_iter)
 
-        # Convert iterator to tuple to ensure it doesn't get exhausted
-        # This is more memory-intensive but prevents issues with iteration
-        return tuple(repo.git.show(commit) for commit in commits_iter)
+    @property
+    def _repo(self) -> Repo:
+        return Repo(self.path)
