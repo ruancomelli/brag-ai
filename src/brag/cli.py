@@ -5,6 +5,7 @@ from their GitHub contributions.
 """
 
 import json
+import sys
 from datetime import datetime
 from itertools import groupby
 from pathlib import Path
