@@ -18,22 +18,32 @@ brag from-repo https://github.com/my-org/my-repo --user my-username
 
 This is convenient when copying a repository URL directly from a browser.
 
+If you want to generate a brag document from a local Git repository instead of a GitHub repository, you can use the `from-local` command:
+
+```bash
+brag from-local /path/to/local/repo --user my-username
+```
+
+This is useful for private repositories or repositories hosted on platforms other than GitHub, as it doesn't require a GitHub API token.
+This option is also useful to avoid rate limiting when generating a brag document from a GitHub repository. It is also faster than using the GitHub API.
+
 ## Command Line Options
 
 Brag AI offers several command line options to customize the generated brag document:
 
-| Option               | Description                                                                                                             |
-| -------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `--repo`             | The repository to generate the brag document for. Can be in `owner/repo` format or a GitHub URL.                        |
-| `--user`             | The GitHub username to generate the brag document for. If not provided, the owner of the GitHub API token will be used. |
-| `--from`             | The start date to generate the brag document for (format: YYYY-MM-DD).                                                  |
-| `--to`               | The end date to generate the brag document for (format: YYYY-MM-DD).                                                    |
-| `--limit`            | The maximum number of commits to include in the brag document.                                                          |
-| `--github-api-token` | The GitHub API token to use for authentication. If not provided, only public information will be included.              |
-| `--output`           | The path to save the generated brag document. If not specified, the document will be printed to stdout.                 |
-| `--overwrite`        | If set, overwrites the output file if it already exists.                                                                |
-| `--model`            | The name of the AI model to use for generating the brag document.                                                       |
-| `--language`         | The language to use for generating the brag document.                                                                   |
+| Option               | Description                                                                                                                                            |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `--repo`             | The repository to generate the brag document for. Can be in `owner/repo` format or a GitHub URL. (Used with `from-repo`)                               |
+| Path argument        | The path to a local Git repository (used with `from-local`).                                                                                           |
+| `--user`             | The GitHub username or Git author to generate the brag document for. If not provided with `from-repo`, the owner of the GitHub API token will be used. |
+| `--from`             | The start date to generate the brag document for (format: YYYY-MM-DD).                                                                                 |
+| `--to`               | The end date to generate the brag document for (format: YYYY-MM-DD).                                                                                   |
+| `--limit`            | The maximum number of commits to include in the brag document.                                                                                         |
+| `--github-api-token` | The GitHub API token to use for authentication (only for `from-repo`). If not provided, only public information will be included.                      |
+| `--output`           | The path to save the generated brag document. If not specified, the document will be printed to stdout.                                                |
+| `--overwrite`        | If set, overwrites the output file if it already exists.                                                                                               |
+| `--model`            | The name of the AI model to use for generating the brag document.                                                                                      |
+| `--language`         | The language to use for generating the brag document.                                                                                                  |
 
 ## Examples
 
@@ -46,6 +56,14 @@ brag from-repo my-org/my-repo --user my-username --from 2023-01-01 --to 2023-12-
 ```
 
 This will generate a brag document for the user `my-username` based on their contributions to the `my-org/my-repo` repository between January 1, 2023, and December 31, 2023.
+
+### Generate a Brag Document from a Local Repository
+
+```bash
+brag from-local ~/projects/my-project --user my-username --from 2023-01-01 --to 2023-12-31
+```
+
+This will generate a brag document for the user `my-username` based on their contributions to the local repository at `~/projects/my-project` between January 1, 2023, and December 31, 2023.
 
 ### Generate a Brag Document in a Different Language
 
