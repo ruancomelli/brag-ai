@@ -21,7 +21,9 @@ plugins:
 - search
 - social
 - api-autonav:
-    modules: [src]
+    modules:
+    - src/brag
+    on_implicit_namespace_packge: raise
 - mkdocstrings:
     handlers:
       python:
@@ -31,11 +33,11 @@ plugins:
           docstring_options:
             ignore_init_summary: true
           docstring_section_style: table
-            # docstring_style: "numpy"
+              # docstring_style: "numpy"
           extensions:
           - dataclasses
           filters: ['!^_']
-            # heading_level: 1
+              # heading_level: 1
           parameter_headings: true
           separate_signature: true
           show_signature_annotations: true
@@ -55,14 +57,14 @@ theme:
       icon: material/brightness-auto
       name: Switch to light mode
 
-      # Palette toggle for light mode
+        # Palette toggle for light mode
   - media: '(prefers-color-scheme: light)'
     scheme: default
     toggle:
       icon: material/brightness-7
       name: Switch to dark mode
 
-      # Palette toggle for dark mode
+        # Palette toggle for dark mode
   - media: '(prefers-color-scheme: dark)'
     scheme: slate
     toggle:
@@ -114,9 +116,6 @@ validation:
 
 extra_css:
 - css/extra.css
-
-exclude_docs: |
-  snippets/
 
 extra:
   social:
