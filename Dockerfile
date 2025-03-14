@@ -15,7 +15,7 @@ RUN pip install --no-cache-dir uv==0.6.6
 COPY . .
 
 # Fix line endings in scripts
-# RUN find ./scripts -type f -name "*.sh" -exec dos2unix {} \;
+RUN find ./scripts -type f -name "*.sh" -exec dos2unix {} \;
 
 # Install dependencies
 RUN uv sync
