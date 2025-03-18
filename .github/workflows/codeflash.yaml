@@ -12,7 +12,6 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-
 jobs:
   optimize:
     name: Optimize new Python code in this PR
@@ -32,6 +31,6 @@ jobs:
       with:
         enable-cache: true
     - name: Install Project Dependencies
-      run: uv sync --all-extras
+      run: uv sync --all-groups
     - name: Run Codeflash to optimize code
-      run: uv run codeflash
+      run: uv run --with codeflash codeflash
