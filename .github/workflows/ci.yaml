@@ -20,6 +20,8 @@ jobs:
           run: bash scripts/format.sh
         - name: type-check
           run: bash scripts/type-check.sh
+        - name: pre-commit
+          run: bash scripts/pre-commit-check.sh
 
     name: Python ${{ matrix.check.name }}
     runs-on: ubuntu-latest
