@@ -117,8 +117,4 @@ def format_commit_as_context(commit: Commit) -> str:
 def _format_commit_file(file: File) -> str:
     """Format the commit file into a context string."""
     file_header = f"{file.status.upper()} {file.filename}:"
-
-    if file.patch is not None:
-        return "\n".join((file_header, file.patch))
-    else:
-        return f"{file_header} (cannot show diff)"
+    return "\n".join((file_header, file.patch))
