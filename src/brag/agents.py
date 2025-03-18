@@ -197,7 +197,7 @@ def _generate_update_brag_document_prompt(
 def _build_agent_from_system_prompt(
     model_name: KnownModelName,
     system_prompt: str,
-):
+) -> Agent:
     return Agent(
         model_name,
         model_settings={"temperature": 0.0},

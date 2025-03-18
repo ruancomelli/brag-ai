@@ -1,12 +1,9 @@
 [project]
 dynamic = ["version"]
-
 name = "brag-ai"
 description = "Generate and maintain a brag document automatically from your GitHub contributions, powered by AI."
-
-authors = [{ name = "Ruan Comelli", email = "ruancomelli@gmail.com" }]
+authors = [{name = "Ruan Comelli", email = "ruancomelli@gmail.com"}]
 readme = "README.md"
-
 classifiers = [
     "Operating System :: OS Independent",
     "Typing :: Typed",
@@ -16,9 +13,8 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.13"
 ]
-
 requires-python = ">=3.12"
 dependencies = [
     "cyclopts>=3.9.2",
@@ -26,7 +22,7 @@ dependencies = [
     "pydantic>=2.10.6",
     "pydantic-ai>=0.0.24",
     "pygithub>=2.6.0",
-    "rich>=13.9.4",
+    "rich>=13.9.4"
 ]
 
 [project.urls]
@@ -49,35 +45,12 @@ path = "src/brag/__init__.py"
 [tool.hatch.build.targets.wheel]
 packages = ["src/brag"]
 
-[dependency-groups]
-lint = ["ruff>=0.9.7"]
-format = ["ruff>=0.9.7"]
-type-check = ["mypy>=1.15.0"]
-test = ["pytest>=8.3.4"]
-test-cov = ["pytest>=8.3.4", "pytest-cov>=6.0.0"]
-pre-commit = [
-    "deptry>=0.23.0",
-    "pre-commit>=4.1.0",
-]
-docs = [
-    "mkdocs>=1.6.1",
-    "mkdocs-api-autonav>=0.2.1",
-    "mkdocs-material[imaging]>=9.6.7",
-    "pymdown-extensions>=10.14.3",
-]
-
 [tool.mypy]
+files = ["src/"]
 plugins = ['pydantic.mypy']
-files = ["src/**/*.py"]
-check_untyped_defs = true
-disallow_any_generics = true
-disallow_untyped_calls = true
-warn_unused_ignores = true
+allow_redefinition = true
 enable_error_code = "possibly-undefined"
-
-[[tool.mypy.overrides]]
-module = ["nox"]
-ignore_missing_imports = true
+strict = true
 
 [tool.pytest.ini_options]
 xfail_strict = true
@@ -85,28 +58,28 @@ testpaths = ["tests"]
 
 [tool.ruff.lint]
 select = [
-    "D",      # pydocstyle
-    "F",      # pyflakes
-    "I",      # isort
-    "PL",     # pylint
-    "RUF100", # unused-noqa-directive
-    "UP",     # pyupgrade
+    "D",  # pydocstyle
+    "F",  # pyflakes
+    "I",  # isort
+    "PL",  # pylint
+    "RUF100",  # unused-noqa-directive
+    "UP"  # pyupgrade
 ]
 ignore = [
-    "D105",    # Missing docstring in magic method
-    "D107",    # Missing docstring in __init__
-    "D203",    # incorrect-blank-line-before-class
-    "D213",    # multi-line-summary-second-line
-    "D413",    # Missing blank line after last section
-    "PLR0913", # Too many arguments in function definition
+    "D105",  # Missing docstring in magic method
+    "D107",  # Missing docstring in __init__
+    "D203",  # incorrect-blank-line-before-class
+    "D213",  # multi-line-summary-second-line
+    "D413",  # Missing blank line after last section
+    "PLR0913"  # Too many arguments in function definition
 ]
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = [
-    "F401", # Unused imports
+    "F401"  # Unused imports
 ]
 "tests/**/*.py" = [
-    "D", # Documentation
+    "D"  # Documentation
 ]
 
 [tool.ruff.lint.pydocstyle]
@@ -122,3 +95,17 @@ formatter-cmds = ["ruff check --exit-zero --fix $file", "ruff format $file"]
 
 [tool.deptry]
 known_first_party = ["brag"]
+
+[dependency-groups]
+lint = ["ruff>=0.9.7"]
+format = ["ruff>=0.9.7"]
+type-check = ["mypy>=1.15.0"]
+test = ["pytest>=8.3.4"]
+test-cov = ["pytest>=8.3.4", "pytest-cov>=6.0.0"]
+pre-commit = ["deptry>=0.23.0", "pre-commit>=4.1.0"]
+docs = [
+    "mkdocs>=1.6.1",
+    "mkdocs-api-autonav>=0.2.1",
+    "mkdocs-material[imaging]>=9.6.7",
+    "pymdown-extensions>=10.14.3"
+]
