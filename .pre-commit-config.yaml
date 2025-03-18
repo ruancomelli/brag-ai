@@ -51,8 +51,14 @@ repos:
 #   - id: zizmor
 #     args: [--config, .github/zizmor.yml]
 
+- repo: https://github.com/fpgmaas/deptry.git
+  rev: 0.23.0
+  hooks:
+  - id: deptry
+
 - repo: local
   hooks:
+
   - id: lint
     name: Lint Python code and fix violations
     stages: [pre-commit, pre-push]

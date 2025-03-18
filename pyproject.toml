@@ -55,7 +55,10 @@ format = ["ruff>=0.9.7"]
 type-check = ["mypy>=1.15.0"]
 test = ["pytest>=8.3.4"]
 test-cov = ["pytest>=8.3.4", "pytest-cov>=6.0.0"]
-pre-commit = ["pre-commit>=4.1.0"]
+pre-commit = [
+    "deptry>=0.23.0",
+    "pre-commit>=4.1.0",
+]
 docs = [
     "mkdocs>=1.6.1",
     "mkdocs-api-autonav>=0.2.1",
@@ -116,3 +119,6 @@ tests-root = "tests"
 test-framework = "pytest"
 ignore-paths = []
 formatter-cmds = ["ruff check --exit-zero --fix $file", "ruff format $file"]
+
+[tool.deptry]
+known_first_party = ["brag"]
