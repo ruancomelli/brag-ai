@@ -100,7 +100,7 @@ Got ideas? We'd love to hear them! Check out our [Contributing Guide](CONTRIBUTI
 
 ## License
 
-This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the [GNU General Public License v3.0](https://choosealicense.com/licenses/gpl-3.0/) - see the [LICENSE](LICENSE) file for details.
 
 ## Support
 
