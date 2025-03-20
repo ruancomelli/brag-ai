@@ -1,7 +1,5 @@
 # 💁 Brag AI
 
-<!-- [![License](https://img.shields.io/pypi/l/brag-ai.svg?color=green)](https://github.com/ruancomelli/brag-ai/raw/main/LICENSE) -->
-
 [![PyPI](https://img.shields.io/pypi/v/brag-ai.svg?logo=pypi&logoColor=white)](https://pypi.org/project/brag-ai)
 [![Python Version](https://img.shields.io/pypi/pyversions/brag-ai.svg?logo=python&logoColor=yellow)](https://python.org)
 [![Docs](https://img.shields.io/badge/docs-latest-blue)](https://ruancomelli.github.io/brag-ai/)
