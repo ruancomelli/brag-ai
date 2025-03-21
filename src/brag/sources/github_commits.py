@@ -83,4 +83,7 @@ def _format_github_commit_as_prompt_context(
 def _format_commit_file(file: File) -> str:
     """Format the commit file into a context string."""
     file_header = f"{file.status.upper()} {file.filename}:"
-    return "\n".join((file_header, file.patch))
+    if file.patch:
+        return "\n".join((file_header, file.patch))
+    else:
+        return f"{file_header} no diff"
