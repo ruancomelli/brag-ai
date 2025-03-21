@@ -12,7 +12,16 @@ from typing import get_args as get_literal_type_args
 from pydantic import BaseModel, ConfigDict
 from pydantic_ai.models import KnownModelName as _KnownModelName
 
-type AvailableModelFullName = _KnownModelName
+# type AvailableModelFullName = _KnownModelName
+type AvailableModelFullName = str
+# type ProviderName = Literal[
+#     "openai",
+#     "anthropic",
+#     "cohere",
+#     "google-gla",
+#     "groq",
+#     "mistral",
+# ]
 type ProviderName = str
 type ModelName = str
 type TokenCount = int
@@ -122,12 +131,28 @@ CONTEXT_WINDOW_SIZES: Final[dict[AvailableModelFullName, TokenCount]] = {
     "mistral:mistral-small-latest": 32_000,
 }
 
+REQUIRED_API_KEY_ENV_VARS: Final[dict[ProviderName, str]] = {
+    "openai": "OPENAI_API_KEY",
+    "anthropic": "ANTHROPIC_API_KEY",
+    "cohere": "COHERE_API_KEY",
+    "google-gla": "GOOGLE_API_KEY",
+    "groq": "GROQ_API_KEY",
+    "mistral": "MISTRAL_API_KEY",
+}
+
 
 class InvalidFullModelNameError(ValueError):
     """Raised when a full model name doesn't follow the 'provider:name' format."""
 
     def __init__(self, full_name: str) -> None:
         super().__init__(f"Invalid model name: {full_name}")
+
+
+class MissingAPIKeyError(ValueError):
+    """Raised when a model has no API key environment variable."""
+
+    def __init__(self, provider: ProviderName) -> None:
+        super().__init__(f"Model {provider} has no API key environment variable.")
 
 
 class MissingContextWindowSizeError(ValueError):
@@ -148,6 +173,7 @@ class Model(BaseModel):
     full_name: AvailableModelFullName
     provider: ProviderName
     name: ModelName
+    api_key_env_var: str
     context_window_size: TokenCount
 
     @classmethod
@@ -163,10 +189,16 @@ class Model(BaseModel):
         except KeyError as e:
             raise MissingContextWindowSizeError(full_name) from e
 
+        try:
+            api_key_env_var = REQUIRED_API_KEY_ENV_VARS[provider]
+        except KeyError as e:
+            raise MissingAPIKeyError(provider) from e
+
         return cls(
             full_name=full_name,
             provider=provider,
             name=name,
+            api_key_env_var=api_key_env_var,
             context_window_size=context_window_size,
         )
 
