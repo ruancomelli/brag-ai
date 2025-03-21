@@ -38,6 +38,7 @@ app = cyclopts.App(
         "Generate and maintain a brag document automatically from your GitHub contributions,"
         " powered by AI."
     ),
+    help_format="md",
     version=__version__,
     version_flags=("--version", "-V"),
     config=cyclopts.config.Env(prefix="BRAG_", command=False),
