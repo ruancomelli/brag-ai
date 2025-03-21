@@ -15,7 +15,6 @@ from github import Github
 from github.Auth import Token
 from loguru import logger
 from rich.console import Console
-from rich.progress import MofNCompleteColumn, Progress, SpinnerColumn
 
 from brag import __version__
 from brag.agents import generate_brag_document
@@ -27,6 +26,7 @@ from brag.models import (
     AvailableModelFullName,
     Model,
 )
+from brag.progress import track_iterable_progress
 from brag.repository import GitHubRepoURL, RepoFullName, RepoReference
 from brag.sources import DataSource
 from brag.sources.git_commits import GitCommit, GitCommitsSource
@@ -44,7 +44,6 @@ app = cyclopts.App(
     version_flags=("--version", "-V"),
     config=cyclopts.config.Env(prefix="BRAG_", command=False),
     # TODO: check how to migrate the following options to `cyclopts`
-    # rich_markup_mode="rich",
     # no_args_is_help=True,
 )
 
@@ -257,7 +256,10 @@ async def from_repo(  # noqa: PLR0912 # Ignore this for now - we need to refacto
         # Batch chunks to respect rate limits
         batched_chunks = tuple(
             batch_chunks_by_token_limit(
-                github_commits,
+                track_iterable_progress(
+                    github_commits,
+                    description="Batching commits",
+                ),
                 model,
                 buffer_percentage=buffer_percentage,
                 joiner=COMMIT_BATCH_JOINER,
@@ -294,22 +296,15 @@ async def from_repo(  # noqa: PLR0912 # Ignore this for now - we need to refacto
                     path=input_brag_document_path,
                 )
 
-    with Progress(
-        SpinnerColumn(),
-        "[progress.description]Processing GitHub commits",
-        MofNCompleteColumn(),
-        "[progress.percentage]({task.percentage:>3.0f}%)",
-        "[progress.elapsed](Elapsed: {task.elapsed:.2f}s)",
-    ) as progress:
-        brag_document = await generate_brag_document(
-            # TODO: fix the type error here
-            # We're temporarily using a string here, but it should be a Literal
-            # of KnownModelName
-            model_name,  # type: ignore
-            progress.track(batched_chunks),
-            language=language,
-            input_brag_document=input_brag_document,
-        )
+    brag_document = await generate_brag_document(
+        # TODO: fix the type error here
+        # We're temporarily using a string here, but it should be a Literal
+        # of KnownModelName
+        model_name,  # type: ignore
+        track_iterable_progress(batched_chunks, description="Processing batches"),
+        language=language,
+        input_brag_document=input_brag_document,
+    )
 
     # Open the output file if specified, otherwise use stdout
     if output:
@@ -506,7 +501,10 @@ async def from_local(
     # Batch chunks to respect rate limits
     batched_chunks = tuple(
         batch_chunks_by_token_limit(
-            git_commits,
+            track_iterable_progress(
+                git_commits,
+                description="Batching commits",
+            ),
             model,
             buffer_percentage=buffer_percentage,
             joiner=COMMIT_BATCH_JOINER,
@@ -542,22 +540,18 @@ async def from_local(
                     path=input_brag_document_path,
                 )
 
-    with Progress(
-        SpinnerColumn(),
-        "[progress.description]Processing commits",
-        MofNCompleteColumn(),
-        "[progress.percentage]({task.percentage:>3.0f}%)",
-        "[progress.elapsed](Elapsed: {task.elapsed:.2f}s)",
-    ) as progress:
-        brag_document = await generate_brag_document(
-            # TODO: fix the type error here
-            # We're temporarily using a string here, but it should be a Literal
-            # of KnownModelName
-            model_name,  # type: ignore
-            progress.track(batched_chunks),
-            language=language,
-            input_brag_document=input_brag_document,
-        )
+    brag_document = await generate_brag_document(
+        # TODO: fix the type error here
+        # We're temporarily using a string here, but it should be a Literal
+        # of KnownModelName
+        model_name,  # type: ignore
+        track_iterable_progress(
+            batched_chunks,
+            description="Processing batches",
+        ),
+        language=language,
+        input_brag_document=input_brag_document,
+    )
 
     # Open the output file if specified, otherwise use stdout
     if output:
