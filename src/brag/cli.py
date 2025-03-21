@@ -23,6 +23,7 @@ from brag.batching import batch_chunks_by_token_limit
 from brag.models import (
     AVAILABLE_MODEL_FULL_NAMES,
     AVAILABLE_MODELS,
+    REQUIRED_API_KEY_ENV_VARS,
     AvailableModelFullName,
     Model,
 )
@@ -301,7 +302,10 @@ async def from_repo(  # noqa: PLR0912 # Ignore this for now - we need to refacto
         "[progress.elapsed](Elapsed: {task.elapsed:.2f}s)",
     ) as progress:
         brag_document = await generate_brag_document(
-            model_name,
+            # TODO: fix the type error here
+            # We're temporarily using a string here, but it should be a Literal
+            # of KnownModelName
+            model_name,  # type: ignore
             progress.track(batched_chunks),
             language=language,
             input_brag_document=input_brag_document,
@@ -546,7 +550,10 @@ async def from_local(
         "[progress.elapsed](Elapsed: {task.elapsed:.2f}s)",
     ) as progress:
         brag_document = await generate_brag_document(
-            model_name,
+            # TODO: fix the type error here
+            # We're temporarily using a string here, but it should be a Literal
+            # of KnownModelName
+            model_name,  # type: ignore
             progress.track(batched_chunks),
             language=language,
             input_brag_document=input_brag_document,
@@ -585,9 +592,12 @@ def list_models(
         case "text":
             grouped_models = groupby(all_models, key=lambda model: model.provider)
             for provider, models in grouped_models:
+                api_key_env_var = REQUIRED_API_KEY_ENV_VARS[provider]
                 print(f"{provider}:")
+                print(f"  API key environment variable: {api_key_env_var}")
+                print("  Models:")
                 for model in models:
-                    print(f"  {model.name}")
+                    print(f"    {model.name}")
         case "json":
             print(
                 json.dumps(
@@ -596,6 +606,7 @@ def list_models(
                             "provider": model.provider,
                             "name": model.name,
                             "full_name": model.full_name,
+                            "api_key_env_var": model.api_key_env_var,
                         }
                         for model in all_models
                     ]
