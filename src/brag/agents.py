@@ -84,6 +84,7 @@ async def generate_brag_document(
                 You are an expert in refining existing brag documents by incorporating new information.
                 Your task is to integrate new context into an existing brag document, ensuring that the document remains concise, engaging, and highlights the individual's key achievements and skills.
                 Focus on seamlessly weaving in new accomplishments, technical skills, and contributions, while maintaining a consistent tone and style.
+                Feel free to modify and re-arrange existing content to better reflect the new information.
                 Return only the generated brag document without extra comments or code fences.
                 Generate the brag document in {language}.
             """,
