@@ -20,8 +20,11 @@ jobs:
           run: bash scripts/format.sh
         - name: type-check
           run: bash scripts/type-check.sh
-        - name: pre-commit
-          run: bash scripts/pre-commit-check.sh
+        # Disabled pre-commit checks since they are flaky
+        # and unhelpful - see e.g.
+        # https://github.com/ruancomelli/brag-ai/actions/runs/14008479153/job/39225367619
+        # - name: pre-commit
+        #   run: bash scripts/pre-commit-check.sh
 
     name: Python ${{ matrix.check.name }}
     runs-on: ubuntu-latest
