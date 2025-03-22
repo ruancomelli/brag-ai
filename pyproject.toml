@@ -84,7 +84,7 @@ ignore = [
 ]
 
 [tool.ruff.lint.pydocstyle]
-ignore-decorators = ["typing.overload", "ropeskip._typing.override"]
+ignore-decorators = ["typing.overload"]
 
 [tool.codeflash]
 # All paths are relative to this pyproject.toml's directory.
