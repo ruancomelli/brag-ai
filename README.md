@@ -107,7 +107,7 @@ This project is licensed under the [GNU General Public License v3.0](https://cho
 - 📖 [Documentation](https://ruancomelli.github.io/brag-ai/)
 - 🐛 [Issue Tracker](https://github.com/ruancomelli/brag-ai/issues)
 - 💬 [Discussions](https://github.com/ruancomelli/brag-ai/discussions)
-- 💻 [Repository](https://github.com/ruancomelli/brag-ai)
+- 💻 [Repository](https://github.com/ruancomelli/brag-ai.git)
 
 ## Why Brag AI?
 
