@@ -2,7 +2,7 @@
 
 [![PyPI](https://img.shields.io/pypi/v/brag-ai.svg?logo=pypi&logoColor=white)](https://pypi.org/project/brag-ai)
 [![Python Version](https://img.shields.io/pypi/pyversions/brag-ai.svg?logo=python&logoColor=yellow)](https://python.org)
-[![Docs](https://img.shields.io/badge/docs-latest-blue)](https://ruancomelli.github.io/brag-ai/)
+[![Docs](https://img.shields.io/badge/docs-latest-blue)](https://www.ruancomelli.com/brag-ai/)
 
 [![uv-managed](https://img.shields.io/badge/managed-261230?label=uv&logo=uv&labelColor=gray)](https://github.com/astral-sh/uv)
 [![CI](https://github.com/ruancomelli/brag-ai/actions/workflows/ci.yaml/badge.svg)](https://github.com/ruancomelli/brag-ai/actions/workflows/ci.yaml)
@@ -78,9 +78,9 @@ The final step is then: ⭐ star [this repo](https://github.com/ruancomelli/brag
 
 For detailed instructions, please refer to the documentation:
 
-- [Installation Guide](https://ruancomelli.github.io/brag-ai/installation/)
-- [Usage Guide](https://ruancomelli.github.io/brag-ai/usage/)
-- [Configuration Options](https://ruancomelli.github.io/brag-ai/configuration/)
+- [Installation Guide](https://www.ruancomelli.com/brag-ai/installation/)
+- [Usage Guide](https://www.ruancomelli.com/brag-ai/usage/)
+- [Configuration Options](https://www.ruancomelli.com/brag-ai/configuration/)
 - [Development Guide](https://github.com/ruancomelli/brag-ai/blob/main/CONTRIBUTING.md)
 
 ## Coming Soon™ 🚀
@@ -102,7 +102,7 @@ This project is licensed under the [GNU General Public License v3.0](https://cho
 
 ## Support
 
-- 📖 [Documentation](https://ruancomelli.github.io/brag-ai/)
+- 📖 [Documentation](https://www.ruancomelli.com/brag-ai/)
 - 🐛 [Issue Tracker](https://github.com/ruancomelli/brag-ai/issues)
 - 💬 [Discussions](https://github.com/ruancomelli/brag-ai/discussions)
 - 💻 [Repository](https://github.com/ruancomelli/brag-ai.git)

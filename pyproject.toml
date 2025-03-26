@@ -30,7 +30,7 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://github.com/ruancomelli/brag-ai"
-Documentation = "https://ruancomelli.github.io/brag-ai/"
+Documentation = "https://www.ruancomelli.com/brag-ai/"
 Repository = "https://github.com/ruancomelli/brag-ai.git"
 Issues = "https://github.com/ruancomelli/brag-ai/issues"
 Changelog = "https://github.com/ruancomelli/brag-ai/blob/main/CHANGELOG.md"

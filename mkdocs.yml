@@ -1,7 +1,7 @@
 strict: true
 site_name: Brag AI
 site_description: Generate and maintain a brag document automatically from your GitHub contributions, powered by AI.
-site_url: https://ruancomelli.github.io/brag-ai
+site_url: https://www.ruancomelli.com/brag-ai
 docs_dir: docs
 site_dir: site
 dev_addr: 127.0.0.1:8000

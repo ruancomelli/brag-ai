@@ -71,7 +71,7 @@ This project is currently private (shhh... 🤫)
 
 ## Support
 
-- 📖 [Documentation](https://ruancomelli.github.io/brag-ai/)
+- 📖 [Documentation](https://www.ruancomelli.com/brag-ai/)
 - 🐛 [Issue Tracker](https://github.com/ruancomelli/brag-ai/issues)
 - 💬 [Discussions](https://github.com/ruancomelli/brag-ai/discussions)
 - 💻 [Repository](https://github.com/ruancomelli/brag-ai)
