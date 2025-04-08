@@ -7,13 +7,17 @@ Brag AI is designed to be simple to use while providing powerful functionality. 
 The primary use case is to generate a brag document for your contributions to a specific GitHub repository:
 
 ```bash
-brag from-repo my-org/my-repo --user my-username
+brag from-repo \
+  --repo my-org/my-repo \
+  --user my-username
 ```
 
 You can also specify a GitHub repository using its URL:
 
 ```bash
-brag from-repo https://github.com/my-org/my-repo --user my-username
+brag from-repo \
+  --repo https://github.com/my-org/my-repo \
+  --user my-username
 ```
 
 This is convenient when copying a repository URL directly from a browser.
@@ -21,7 +25,9 @@ This is convenient when copying a repository URL directly from a browser.
 If you want to generate a brag document from a local Git repository instead of a GitHub repository, you can use the `from-local` command:
 
 ```bash
-brag from-local /path/to/local/repo --user my-username
+brag from-local \
+  /path/to/local/repo \
+  --user my-username
 ```
 
 This is useful for private repositories or repositories hosted on platforms other than GitHub, as it doesn't require a GitHub API token.
@@ -31,19 +37,21 @@ This option is also useful to avoid rate limiting when generating a brag documen
 
 Brag AI offers several command line options to customize the generated brag document:
 
-| Option               | Description                                                                                                                                            |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `--repo`             | The repository to generate the brag document for. Can be in `owner/repo` format or a GitHub URL. (Used with `from-repo`)                               |
-| Path argument        | The path to a local Git repository (used with `from-local`).                                                                                           |
-| `--user`             | The GitHub username or Git author to generate the brag document for. If not provided with `from-repo`, the owner of the GitHub API token will be used. |
-| `--from`             | The start date to generate the brag document for (format: YYYY-MM-DD).                                                                                 |
-| `--to`               | The end date to generate the brag document for (format: YYYY-MM-DD).                                                                                   |
-| `--limit`            | The maximum number of commits to include in the brag document.                                                                                         |
-| `--github-api-token` | The GitHub API token to use for authentication (only for `from-repo`). If not provided, only public information will be included.                      |
-| `--output`           | The path to save the generated brag document. If not specified, the document will be printed to stdout.                                                |
-| `--overwrite`        | If set, overwrites the output file if it already exists.                                                                                               |
-| `--model`            | The name of the AI model to use for generating the brag document.                                                                                      |
-| `--language`         | The language to use for generating the brag document.                                                                                                  |
+| Option                                | Description                                                                                                                                            |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `--repo` (`owner/repo` or GitHub URL) | The repository to generate the brag document for. Can be in `owner/repo` format or a GitHub URL. (Used with `from-repo`)                               |
+| `--repo` Path argument                | The path to a local Git repository (used with `from-local`).                                                                                           |
+| `--user`                              | The GitHub username or Git author to generate the brag document for. If not provided with `from-repo`, the owner of the GitHub API token will be used. |
+| `--from`                              | The start date to generate the brag document for (format: YYYY-MM-DD).                                                                                 |
+| `--to`                                | The end date to generate the brag document for (format: YYYY-MM-DD).                                                                                   |
+| `--limit`                             | The maximum number of commits to include in the brag document.                                                                                         |
+| `--input`, `--i`                      | Path to an existing brag document to update with new contributions. If not provided, a new brag document will be generated from scratch.               |
+| `--on-missing-input`                  | What to do if the input brag document does not exist. Options: `error` (default) or `ignore`.                                                          |
+| `--github-api-token`                  | The GitHub API token to use for authentication (only for `from-repo`). If not provided, only public information will be included.                      |
+| `--output`, `-o`                      | The path to save the generated brag document. If not specified, the document will be printed to stdout.                                                |
+| `--on-existing-output`                | What to do if the output file already exists. Options: `error` (default) or `overwrite`.                                                               |
+| `--model`                             | The name of the AI model to use for generating the brag document.                                                                                      |
+| `--language`                          | The language to use for generating the brag document.                                                                                                  |
 
 ## Examples
 
@@ -76,7 +84,10 @@ This will generate a brag document in Portuguese.
 ### Save the Brag Document to a File
 
 ```bash
-brag from-repo my-org/my-repo --user my-username --output brag.md
+brag from-repo \
+  --repo my-org/my-repo \
+  --user my-username \
+  --output brag.md
 ```
 
 This will save the generated brag document to a file named `brag.md`.
@@ -84,13 +95,41 @@ This will save the generated brag document to a file named `brag.md`.
 ### Combine Multiple Options
 
 ```bash
-brag from-repo my-org/my-repo --user my-username \
-  --from 2023-01-01 --to 2023-12-31 \
+brag from-repo \
+  --repo my-org/my-repo \
+  --user my-username \
+  --from 2023-01-01 \
+  --to 2023-12-31 \
   --language Português \
   --output brag.md
 ```
 
 This combines multiple options to generate a brag document in Portuguese for a specific time period and save it to a file.
+
+### Update an Existing Brag Document
+
+```bash
+brag from-repo \
+  --repo my-org/my-repo \
+  --user my-username \
+  --input existing-brag.md \
+  --output updated-brag.md
+```
+
+This will update an existing brag document (`existing-brag.md`) with new contributions from the repository, and save the result to `updated-brag.md`.
+
+You can also update your brag document incrementally using the same output file:
+
+```bash
+brag from-repo \
+  --repo my-org/my-repo \
+  --user my-username \
+  --input brag.md \
+  --output brag.md \
+  --on-existing-output overwrite
+```
+
+This will read the existing brag document, update it with new contributions, and overwrite the same file.
 
 ## Using Different AI Models
 
