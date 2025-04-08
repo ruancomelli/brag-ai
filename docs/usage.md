@@ -4,13 +4,19 @@ Brag AI is designed to be simple to use while providing powerful functionality. 
 
 ## Basic Usage
 
-The most basic way to use Brag AI is to generate a brag document from a GitHub repository:
+The primary use case is to generate a brag document for your contributions to a specific GitHub repository:
 
 ```bash
-brag from-repo owner/repo --user github-username
+brag from-repo my-org/my-repo --user my-username
 ```
 
-This will generate a brag document based on the commits made by `github-username` to the specified repository.
+You can also specify a GitHub repository using its URL:
+
+```bash
+brag from-repo https://github.com/my-org/my-repo --user my-username
+```
+
+This is convenient when copying a repository URL directly from a browser.
 
 ## Command Line Options
 
@@ -18,6 +24,7 @@ Brag AI offers several command line options to customize the generated brag docu
 
 | Option               | Description                                                                                                             |
 | -------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `--repo`             | The repository to generate the brag document for. Can be in `owner/repo` format or a GitHub URL.                        |
 | `--user`             | The GitHub username to generate the brag document for. If not provided, the owner of the GitHub API token will be used. |
 | `--from`             | The start date to generate the brag document for (format: YYYY-MM-DD).                                                  |
 | `--to`               | The end date to generate the brag document for (format: YYYY-MM-DD).                                                    |
@@ -69,7 +76,7 @@ This combines multiple options to generate a brag document in Portuguese for a s
 
 ## Using Different AI Models
 
-Brag AI supports various AI models through `pydantic-ai`. You can specify which model to use with the `--model` option:
+Brag AI supports various AI models through [PydanticAI](https://ai.pydantic.dev/models/). You can specify which model to use with the `--model` option:
 
 ### OpenAI Models
 

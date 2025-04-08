@@ -69,7 +69,7 @@ Brag AI has several command-line options that can be used to configure its behav
 
 ## Model Selection
 
-Brag AI supports a variety of AI models through `pydantic-ai`. You can specify which model to use with the `--model` option.
+Brag AI supports a variety of AI models through PydanticAI. You can specify which model to use with the `--model` option.
 
 The format for the model name is `provider:model-name`. For example:
 
@@ -77,18 +77,18 @@ The format for the model name is `provider:model-name`. For example:
 - `anthropic:claude-3-5-sonnet-latest`
 - `google-vertex:gemini-2.0-flash`
 
-For a full list of supported models, see the [pydantic-ai documentation](https://ai.pydantic.dev/models/).
+For a full list of supported models, see the [PydanticAI documentation](https://ai.pydantic.dev/models/).
 
 ## Default Values
 
 If not specified, Brag AI uses the following default values:
 
-- User: The owner of the GitHub API token
+- User: The owner of the GitHub API token, if provided
 - From date: None (no lower bound)
 - To date: None (the current date)
 - Limit: None (no limit)
 - Output: stdout (print to console)
-- Model: The default model configured in pydantic-ai
+- Model: `google-gla:gemini-2.0-flash`
 - Language: English
 
 ## Example Configurations

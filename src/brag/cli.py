@@ -28,7 +28,7 @@ from brag.models import (
     AvailableModelFullName,
     Model,
 )
-from brag.repository import RepoFullName, RepoReference
+from brag.repository import GitHubRepoURL, RepoFullName, RepoReference
 
 COMMIT_BATCH_JOINER = "\n\n---\n\n"
 
@@ -54,10 +54,10 @@ model_group = cyclopts.Group("Model")
 @app.command
 async def from_repo(
     repo_full_name: Annotated[
-        RepoFullName,
+        RepoFullName | GitHubRepoURL,
         cyclopts.Parameter(
             name="--repo",
-            help="The repository to generate the brag document for. Format: `owner/repo`",
+            help="The repository to generate the brag document for. Format: `owner/repo` or a GitHub URL",
             group=inputs_group,
         ),
     ],
@@ -192,7 +192,11 @@ async def from_repo(
         to_date=f" to {to_date}" if to_date else "",
     )
 
-    repo = RepoReference.from_repo_full_name(repo_full_name)
+    # Parse the repo reference based on the input format
+    if repo_full_name.startswith(("http://", "https://")):
+        repo = RepoReference.from_github_repo_url(repo_full_name)
+    else:
+        repo = RepoReference.from_repo_full_name(repo_full_name)
 
     with Github(auth=Token(github_api_token) if github_api_token else None) as g:
         if not user_login:
