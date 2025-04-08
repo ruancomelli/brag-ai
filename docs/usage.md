@@ -76,20 +76,13 @@ This combines multiple options to generate a brag document in Portuguese for a s
 
 ## Using Different AI Models
 
-Brag AI supports various AI models through `pydantic-ai`. You can specify which model to use with the `--model` option:
+Brag AI supports various AI models through [PydanticAI](https://ai.pydantic.dev/models/). You can specify which model to use with the `--model` option:
 
 ### OpenAI Models
 
 ```bash
 export OPENAI_API_KEY=your-openai-api-key
 brag from-repo owner/repo --model openai:gpt-4o --user github-username
-```
-
-Or using a GitHub URL:
-
-```bash
-export OPENAI_API_KEY=your-openai-api-key
-brag from-repo https://github.com/owner/repo --model openai:gpt-4o --user github-username
 ```
 
 ### Anthropic Models
