@@ -1,6 +1,7 @@
 """Helper functions for tracking the progress of long-running operations."""
 
 from collections.abc import Iterable, Iterator
+from functools import cache
 
 from rich.progress import BarColumn, MofNCompleteColumn, Progress, SpinnerColumn
 
@@ -28,10 +29,25 @@ def _progress_bar(*, description: str) -> Progress:
     Useful for ensuring a consistent progress bar across the CLI.
     """
     return Progress(
-        SpinnerColumn(spinner_name="point"),
+        _get_spinner_column(),
         f"[progress.description]{description}",
-        MofNCompleteColumn(),
-        BarColumn(),
+        _get_mofncomplete_column(),
+        _get_bar_column(),
         "[progress.percentage]({task.percentage:>3.0f}%)",
         "[progress.elapsed](Elapsed: {task.elapsed:.2f}s)",
     )
+
+
+@cache
+def _get_spinner_column():
+    return SpinnerColumn(spinner_name="point")
+
+
+@cache
+def _get_mofncomplete_column():
+    return MofNCompleteColumn()
+
+
+@cache
+def _get_bar_column():
+    return BarColumn()
