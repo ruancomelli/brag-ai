@@ -4,10 +4,13 @@ name = "brag-ai"
 description = "Generate and maintain a brag document automatically from your GitHub contributions, powered by AI."
 authors = [{name = "Ruan Comelli", email = "ruancomelli@gmail.com"}]
 readme = "README.md"
+license = "GPL-3.0-only"
+license-files = ["LICENSE"]
 classifiers = [
     "Operating System :: OS Independent",
     "Typing :: Typed",
     "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     "Intended Audience :: Developers",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
