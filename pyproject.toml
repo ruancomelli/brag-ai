@@ -2,21 +2,29 @@
 dynamic = ["version"]
 name = "brag-ai"
 description = "Generate and maintain a brag document automatically from your GitHub contributions, powered by AI."
-authors = [{name = "Ruan Comelli", email = "ruancomelli@gmail.com"}]
+authors = [{ name = "Ruan Comelli", email = "ruancomelli@gmail.com" }]
 readme = "README.md"
 license = "GPL-3.0-only"
 license-files = ["LICENSE"]
 classifiers = [
-    "Operating System :: OS Independent",
-    "Typing :: Typed",
-    "Development Status :: 3 - Alpha",
-    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
     "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13"
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Artificial Intelligence",
+    "Topic :: Office/Business",
+    "Topic :: Software Development :: Documentation",
+    "Topic :: Text Processing :: Markup",
+    "Topic :: Text Processing :: Markup :: Markdown",
+    "Topic :: Utilities",
+    "Typing :: Typed",
 ]
 requires-python = ">=3.12"
 dependencies = [
@@ -26,7 +34,7 @@ dependencies = [
     "pydantic>=2.10.6",
     "pydantic-ai-slim[anthropic,cohere,groq,mistral,openai,vertexai]>=0.0.43",
     "pygithub>=2.6.0",
-    "rich>=13.9.4"
+    "rich>=13.9.4",
 ]
 
 [project.urls]
@@ -63,28 +71,28 @@ testpaths = ["tests"]
 
 [tool.ruff.lint]
 select = [
-    "D",  # pydocstyle
-    "F",  # pyflakes
-    "I",  # isort
-    "PL",  # pylint
-    "RUF100",  # unused-noqa-directive
-    "UP"  # pyupgrade
+    "D",      # pydocstyle
+    "F",      # pyflakes
+    "I",      # isort
+    "PL",     # pylint
+    "RUF100", # unused-noqa-directive
+    "UP",     # pyupgrade
 ]
 ignore = [
-    "D105",  # Missing docstring in magic method
-    "D107",  # Missing docstring in __init__
-    "D203",  # incorrect-blank-line-before-class
-    "D213",  # multi-line-summary-second-line
-    "D413",  # Missing blank line after last section
-    "PLR0913"  # Too many arguments in function definition
+    "D105",    # Missing docstring in magic method
+    "D107",    # Missing docstring in __init__
+    "D203",    # incorrect-blank-line-before-class
+    "D213",    # multi-line-summary-second-line
+    "D413",    # Missing blank line after last section
+    "PLR0913", # Too many arguments in function definition
 ]
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = [
-    "F401"  # Unused imports
+    "F401", # Unused imports
 ]
 "tests/**/*.py" = [
-    "D"  # Documentation
+    "D", # Documentation
 ]
 
 [tool.ruff.lint.pydocstyle]
@@ -112,5 +120,5 @@ docs = [
     "mkdocs>=1.6.1",
     "mkdocs-api-autonav>=0.2.1",
     "mkdocs-material[imaging]>=9.6.7",
-    "pymdown-extensions>=10.14.3"
+    "pymdown-extensions>=10.14.3",
 ]
