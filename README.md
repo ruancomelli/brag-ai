@@ -44,6 +44,8 @@ Perfect for:
 - 📈 Personal development tracking (watch yourself grow!)
 - 🎉 Impressing your friends (and maybe your pet - results may vary)
 
+We're also proud users of our own tool! Check out our [contributor brag documents](examples/contributors/) which are automatically generated and updated by a [GitHub workflow](.github/workflows/contributor-brags.yaml). This is a great example of how you can integrate brag-ai into your own projects.
+
 ## Features
 
 - 🔍 **GitHub Integration**: Automagically analyzes your commits to generate achievement descriptions
