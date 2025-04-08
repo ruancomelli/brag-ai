@@ -2,7 +2,13 @@
 
 import pytest
 
-from brag.repository import RepoReference
+from brag.repository import (
+    REPO_FULL_NAME_PATTERN,
+    REPO_URL_PATTERN,
+    InvalidGitHubRepoURL,
+    InvalidRepoFullName,
+    RepoReference,
+)
 
 
 def test_repo_reference_creation() -> None:
@@ -39,8 +45,11 @@ def test_from_repo_full_name(
 
 def test_from_repo_full_name_raises_value_error() -> None:
     """Test that from_repo_full_name raises a ValueError for invalid input."""
-    with pytest.raises(ValueError):
+    with pytest.raises(InvalidRepoFullName) as e:
         RepoReference.from_repo_full_name("invalid-repo-name")
+    assert "Invalid repository full name: 'invalid-repo-name'" in str(e.value)
+    assert e.value.repo_full_name == "invalid-repo-name"
+    assert e.value.expected_format == REPO_FULL_NAME_PATTERN
 
 
 @pytest.mark.parametrize(
@@ -73,5 +82,8 @@ def test_from_github_repo_url(
 )
 def test_from_github_repo_url_raises_value_error(invalid_url: str) -> None:
     """Test that from_github_repo_url raises a ValueError for invalid input."""
-    with pytest.raises(ValueError):
+    with pytest.raises(InvalidGitHubRepoURL) as e:
         RepoReference.from_github_repo_url(invalid_url)
+    assert f"Invalid GitHub repository URL: {invalid_url!r}" in str(e.value)
+    assert e.value.github_repo_url == invalid_url
+    assert e.value.expected_format == REPO_URL_PATTERN
