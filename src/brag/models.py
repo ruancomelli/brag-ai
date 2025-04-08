@@ -65,8 +65,9 @@ CONTEXT_WINDOW_SIZES: Final[dict[AvailableModelFullName, TokenCount]] = {
     # Anthropic
     # https://docs.anthropic.com/en/docs/about-claude/models/all-models#model-comparison-table
     # ------------------------------------------------------------
-    "anthropic:claude-3-5-haiku-latest": 200_000,
+    "anthropic:claude-3-7-sonnet-latest": 200_000,
     "anthropic:claude-3-5-sonnet-latest": 200_000,
+    "anthropic:claude-3-5-haiku-latest": 200_000,
     "anthropic:claude-3-opus-latest": 200_000,
     # ==========================================================
     # Cohere
@@ -144,14 +145,10 @@ class Model(BaseModel):
 
     model_config = ConfigDict(frozen=True)
 
+    full_name: AvailableModelFullName
     provider: ProviderName
     name: ModelName
     context_window_size: TokenCount
-
-    @property
-    def full_name(self) -> str:
-        """The full qualified name of the model in 'provider:name' format."""
-        return f"{self.provider}:{self.name}"
 
     @classmethod
     def from_full_name(cls, full_name: AvailableModelFullName) -> Self:
@@ -167,6 +164,7 @@ class Model(BaseModel):
             raise MissingContextWindowSizeError(full_name) from e
 
         return cls(
+            full_name=full_name,
             provider=provider,
             name=name,
             context_window_size=context_window_size,
@@ -178,8 +176,7 @@ def _iter_available_models() -> Iterator[Model]:
 
     Skips models with invalid provider names or unknown context window sizes.
     """
-    known_models = get_literal_type_args(_KnownModelName)
-    for model_name in known_models:
+    for model_name in _iter_pydantic_ai_model_full_names():
         try:
             yield Model.from_full_name(model_name)
         except (
@@ -191,7 +188,28 @@ def _iter_available_models() -> Iterator[Model]:
             continue
 
 
+def _iter_pydantic_ai_model_full_names() -> Iterator[AvailableModelFullName]:
+    """Iterate over all available models from pydantic-ai's known models."""
+    yield from get_literal_type_args(_KnownModelName)
+
+
 AVAILABLE_MODELS = frozenset(_iter_available_models())
 """Frozen set of all available and valid AI models."""
 AVAILABLE_MODEL_FULL_NAMES = frozenset(model.full_name for model in AVAILABLE_MODELS)
 """Frozen set of all available and valid AI model full names."""
+
+if __name__ == "__main__":
+    from rich import print
+    from rich.pretty import pprint
+
+    print("Available models:")
+    pprint(sorted(AVAILABLE_MODEL_FULL_NAMES))
+    print()
+    print("Models defined in Pydantic AI but missing in Brag AI:")
+    pydantic_ai_model_full_names = frozenset(
+        model_name
+        for model_name in _iter_pydantic_ai_model_full_names()
+        # Only consider models with a provider name
+        if ":" in model_name
+    )
+    pprint(sorted(pydantic_ai_model_full_names - AVAILABLE_MODEL_FULL_NAMES))
