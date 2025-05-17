@@ -5,6 +5,7 @@ site_url: https://www.ruancomelli.com/brag-ai
 docs_dir: docs
 site_dir: site
 dev_addr: 127.0.0.1:8000
+repo_name: ruancomelli/brag-ai
 repo_url: https://github.com/ruancomelli/brag-ai
 edit_uri: edit/main/docs
 
@@ -22,6 +23,9 @@ plugins:
 - social
 - api-autonav:
     modules: [src]
+- mike:
+    alias_type: symlink
+    canonical_version: latest
 - mkdocstrings:
     handlers:
       python:
@@ -118,5 +122,7 @@ extra:
   - icon: fontawesome/brands/github
     link: https://github.com/ruancomelli/brag-ai
     name: ruancomelli/brag-ai on GitHub
+  version:
+    provider: mike
 
 copyright: '&copy; 2025 Ruan Comelli'
