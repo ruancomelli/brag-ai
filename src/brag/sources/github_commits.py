@@ -72,15 +72,14 @@ def _format_github_commit_as_prompt_context(
         A string containing the commit message and file diffs.
 
     """
-    return "\n\n".join(
-        (
-            commit.commit.message.strip(),
-            *map(_format_commit_file, commit.files),
-        )
-    )
+    # Collect commit message and formatted files in a list then join
+    res = [commit.commit.message.strip()]
+    for f in commit.files:
+        res.append(_format_commit_file(f))
+    return "\n\n".join(res)
 
 
 def _format_commit_file(file: File) -> str:
     """Format the commit file into a context string."""
-    file_header = f"{file.status.upper()} {file.filename}:"
-    return "\n".join((file_header, file.patch))
+    # Build string directly without creating a tuple
+    return f"{file.status.upper()} {file.filename}:\n{file.patch}"
