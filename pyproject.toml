@@ -7,16 +7,18 @@ readme = "README.md"
 license = "GPL-3.0-only"
 license-files = ["LICENSE"]
 classifiers = [
-    "Operating System :: OS Independent",
-    "Typing :: Typed",
-    "Development Status :: 3 - Alpha",
-    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
     "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13"
+    "Programming Language :: Python :: 3.13",
+    "Typing :: Typed"
 ]
 requires-python = ">=3.12"
 dependencies = [
