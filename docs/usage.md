@@ -4,6 +4,8 @@ Brag AI is designed to be simple to use while providing powerful functionality. 
 
 ## Basic Usage
 
+### From a remote GitHub repository
+
 The primary use case is to generate a brag document for your contributions to a specific GitHub repository:
 
 ```bash
@@ -18,14 +20,22 @@ brag from-repo https://github.com/my-org/my-repo --user my-username
 
 This is convenient when copying a repository URL directly from a browser.
 
-If you want to generate a brag document from a local Git repository instead of a GitHub repository, you can use the `from-local` command:
+### From a local Git repository
+
+If you want to generate a brag document from a local Git repository instead of a remote GitHub repository, you can use the `from-local` command:
 
 ```bash
 brag from-local /path/to/local/repo --user my-username
 ```
 
-This is useful for private repositories or repositories hosted on platforms other than GitHub, as it doesn't require a GitHub API token.
-This option is also useful to avoid rate limiting when generating a brag document from a GitHub repository. It is also faster than using the GitHub API.
+This command is particularly useful when:
+
+- You have a private repository that you've already cloned locally
+- You're working with repositories hosted on platforms other than GitHub
+- You want to avoid GitHub API rate limits
+- You need faster processing since it reads directly from your local filesystem
+
+Note that this option requires you to have the repository cloned on your machine first, as it reads the Git history directly from your local filesystem.
 
 ## Command Line Options
 
