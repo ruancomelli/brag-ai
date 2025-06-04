@@ -41,15 +41,27 @@ Changelog = "https://github.com/ruancomelli/brag-ai/blob/main/CHANGELOG.md"
 [project.scripts]
 brag = "brag.__main__:app"
 
+[dependency-groups]
+lint = ["ruff>=0.9.7"]
+format = ["ruff>=0.9.7"]
+type-check = ["mypy>=1.15.0"]
+test = ["pytest>=8.3.4"]
+test-cov = ["pytest>=8.3.4", "pytest-cov>=6.0.0"]
+pre-commit = ["deptry>=0.23.0", "pre-commit>=4.1.0"]
+docs = [
+    "mkdocs>=1.6.1",
+    "mkdocs-api-autonav>=0.2.1",
+    "mkdocs-material[imaging]>=9.6.7",
+    "pymdown-extensions>=10.14.3"
+]
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
-[tool.hatch.version]
-path = "src/brag/__init__.py"
-
-[tool.hatch.build.targets.wheel]
-packages = ["src/brag"]
+[tool.hatch]
+version.path = "src/brag/__init__.py"
+build.targets.wheel.packages = ["src/brag"]
 
 [tool.mypy]
 files = ["src/"]
@@ -67,6 +79,12 @@ ignore_errors = true
 [tool.pytest.ini_options]
 xfail_strict = true
 testpaths = ["tests"]
+
+[tool.coverage]
+report.fail_under = 100
+report.show_missing = true
+run.branch = true
+run.source = ["src/"]
 
 [tool.ruff.lint]
 select = [
@@ -107,17 +125,3 @@ formatter-cmds = ["ruff check --exit-zero --fix $file", "ruff format $file"]
 
 [tool.deptry]
 known_first_party = ["brag"]
-
-[dependency-groups]
-lint = ["ruff>=0.9.7"]
-format = ["ruff>=0.9.7"]
-type-check = ["mypy>=1.15.0"]
-test = ["pytest>=8.3.4"]
-test-cov = ["pytest>=8.3.4", "pytest-cov>=6.0.0"]
-pre-commit = ["deptry>=0.23.0", "pre-commit>=4.1.0"]
-docs = [
-    "mkdocs>=1.6.1",
-    "mkdocs-api-autonav>=0.2.1",
-    "mkdocs-material[imaging]>=9.6.7",
-    "pymdown-extensions>=10.14.3"
-]
