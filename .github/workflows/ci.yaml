@@ -29,7 +29,9 @@ jobs:
     name: Python ${{ matrix.check.name }}
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
+      with:
+        persist-credentials: false
 
     - name: Set up Python
       uses: astral-sh/setup-uv@v7
@@ -53,7 +55,9 @@ jobs:
     name: Python ${{ matrix.python-version }} test on ${{ matrix.runner }}
     runs-on: ${{ matrix.runner }}
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
+      with:
+        persist-credentials: false
 
     - name: Set up Python
       uses: astral-sh/setup-uv@v7
@@ -76,6 +80,8 @@ jobs:
     name: Shellcheck
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
+      with:
+        persist-credentials: false
     - name: Run ShellCheck
       uses: ludeeus/action-shellcheck@2.0.0

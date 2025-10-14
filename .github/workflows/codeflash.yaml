@@ -23,9 +23,10 @@ jobs:
       CODEFLASH_PR_NUMBER: ${{ github.event.number }}
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         fetch-depth: 0
+        persist-credentials: false
     - name: Setup UV
       uses: astral-sh/setup-uv@v7
       with:

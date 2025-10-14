@@ -1,7 +1,7 @@
 repos:
 
 - repo: https://github.com/astral-sh/uv-pre-commit
-  rev: 0.7.9
+  rev: 0.9.2
   hooks:
       # Update the uv lockfile
   - id: uv-lock
@@ -10,7 +10,7 @@ repos:
     args: [--locked, --all-packages]
 
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v5.0.0
+  rev: v6.0.0
   hooks:
   - id: check-added-large-files
   - id: check-json
@@ -25,7 +25,7 @@ repos:
   - id: trailing-whitespace
 
 - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
-  rev: v2.14.0
+  rev: v2.15.0
   hooks:
   - id: pretty-format-yaml
     args: [--autofix, --indent, '2']
@@ -33,17 +33,17 @@ repos:
     args: [--autofix, --indent, '4', --no-sort]
 
 - repo: https://gitlab.com/vojko.pribudic.foss/pre-commit-update
-  rev: v0.7.0
+  rev: v0.8.0
   hooks:
   - id: pre-commit-update
 
 - repo: https://github.com/koalaman/shellcheck-precommit
-  rev: v0.10.0
+  rev: v0.11.0
   hooks:
   - id: shellcheck
 
 - repo: https://github.com/rhysd/actionlint
-  rev: v1.7.7
+  rev: v1.7.8
   hooks:
   - id: actionlint
 
@@ -54,7 +54,7 @@ repos:
 #     args: [--config, .github/zizmor.yml]
 
 - repo: https://github.com/fpgmaas/deptry.git
-  rev: 0.23.0
+  rev: 0.23.1
   hooks:
   - id: deptry
 
