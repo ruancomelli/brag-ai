@@ -262,7 +262,7 @@ async def from_repo(  # noqa: PLR0912 # Ignore this for now - we need to refacto
                     description="Batching commits",
                 ),
                 model,
-                buffer_percentage=buffer_percentage,
+                buffer_ratio=buffer_percentage,
                 joiner=COMMIT_BATCH_JOINER,
             )
         )
@@ -507,7 +507,7 @@ async def from_local(
                 description="Batching commits",
             ),
             model,
-            buffer_percentage=buffer_percentage,
+            buffer_ratio=buffer_percentage,
             joiner=COMMIT_BATCH_JOINER,
         )
     )
