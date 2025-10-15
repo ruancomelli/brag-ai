@@ -10,7 +10,7 @@ from brag.tokens import estimate_token_count
 def batch_chunks_by_token_limit(
     chunks: Iterable[str],
     model: Model,
-    buffer_percentage: float = 0.2,
+    buffer_ratio: float = 0.2,
     joiner: str = "\n\n---\n\n",
 ) -> Iterator[str]:
     """Batch text chunks together to fit within a model's context window.
@@ -34,7 +34,7 @@ def batch_chunks_by_token_limit(
     Args:
         chunks: An iterable of strings, where each string is a chunk of text.
         model: The model to use, which determines the context window size.
-        buffer_percentage: A percentage (0.0 to 1.0) of the context window to reserve as buffer.
+        buffer_ratio: A ratio (0.0 to 1.0) of the context window to reserve as buffer.
             This helps prevent exceeding the context window due to estimation errors.
             Higher values (e.g., 0.3) are more conservative, while lower values (e.g., 0.1)
             allow for more chunks per batch but increase the risk of exceeding the limit.
@@ -44,7 +44,7 @@ def batch_chunks_by_token_limit(
         Batches of text chunks, each fitting within the model's context window.
     """
     # Get model context window size
-    max_tokens_per_batch = int(model.context_window_size * (1 - buffer_percentage))
+    max_tokens_per_batch = int(model.context_window_size * (1 - buffer_ratio))
 
     current_batch: str = ""
     current_batch_token_count = 0
