@@ -47,25 +47,26 @@ def batch_chunks_by_token_limit(
     max_tokens_per_batch = int(model.context_window_size * (1 - buffer_percentage))
 
     current_batch: str = ""
-    current_batch_tokens = 0
+    current_batch_token_count = 0
 
     for chunk in chunks:
         # Use the overestimate strategy to be conservative, that is, to ensure that the chunk
         # will fit within the context window.
         chunk_token_count = estimate_token_count(
-            chunk, approximation_mode="overestimate"
+            chunk,
+            approximation_mode="overestimate",
         )
 
         # If adding this chunk would exceed the limit, yield the current batch and start a new one
         if current_batch and (
-            current_batch_tokens + chunk_token_count > max_tokens_per_batch
+            current_batch_token_count + chunk_token_count > max_tokens_per_batch
         ):
             yield current_batch
             current_batch = chunk
-            current_batch_tokens = chunk_token_count
+            current_batch_token_count = chunk_token_count
         else:
             current_batch = promptify(current_batch, chunk, joiner=joiner)
-            current_batch_tokens += chunk_token_count
+            current_batch_token_count += chunk_token_count
 
     # Add the last batch if it's not empty
     if current_batch:
