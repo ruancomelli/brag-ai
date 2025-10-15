@@ -28,7 +28,7 @@ dependencies = [
     "pydantic>=2.10.6",
     "pydantic-ai-slim[anthropic,cohere,groq,mistral,openai,vertexai]>=0.0.43",
     "pygithub>=2.6.0",
-    "rich>=13.9.4"
+    "rich>=14.2.0"
 ]
 
 [project.urls]
