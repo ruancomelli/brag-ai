@@ -155,13 +155,6 @@ class MissingAPIKeyError(ValueError):
         super().__init__(f"Model {provider} has no API key environment variable.")
 
 
-class MissingContextWindowSizeError(ValueError):
-    """Raised when a model has no context window size."""
-
-    def __init__(self, model_name: str) -> None:
-        super().__init__(f"Model {model_name} has no known context window size.")
-
-
 class Model(BaseModel):
     """Represents an AI model with its provider and name.
 
@@ -171,77 +164,32 @@ class Model(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     full_name: AvailableModelFullName
-    provider: ProviderName
-    name: ModelName
-    api_key_env_var: str
-    context_window_size: TokenCount
 
     @classmethod
     def from_full_name(cls, full_name: AvailableModelFullName) -> Self:
-        """Parse a full model name in 'provider:name' format into a Model instance."""
-        try:
-            provider, name = full_name.split(":")
-        except ValueError as e:
-            raise InvalidFullModelNameError(full_name) from e
+        """Parse a full model name into a Model instance."""
+        return cls(full_name=full_name)
 
-        try:
-            context_window_size = CONTEXT_WINDOW_SIZES[full_name]
-        except KeyError as e:
-            raise MissingContextWindowSizeError(full_name) from e
+    def get_default_context_window_size(self) -> TokenCount | None:
+        """Get the default context window size for the model.
 
-        try:
-            api_key_env_var = REQUIRED_API_KEY_ENV_VARS[provider]
-        except KeyError as e:
-            raise MissingAPIKeyError(provider) from e
-
-        return cls(
-            full_name=full_name,
-            provider=provider,
-            name=name,
-            api_key_env_var=api_key_env_var,
-            context_window_size=context_window_size,
-        )
+        Returns:
+            The default context window size for the model, or None if not found.
+        """
+        return CONTEXT_WINDOW_SIZES.get(self.full_name)
 
 
-def _iter_available_models() -> Iterator[Model]:
-    """Iterate over all available models from pydantic-ai's known models.
-
-    Skips models with invalid provider names or unknown context window sizes.
-    """
-    for model_name in _iter_pydantic_ai_model_full_names():
-        try:
-            yield Model.from_full_name(model_name)
-        except (
-            # Some models in `pydantic-ai` don't have a valid provider name
-            InvalidFullModelNameError,
-            # We need to know the context window size for the model
-            MissingContextWindowSizeError,
-        ):
-            continue
-
-
-def _iter_pydantic_ai_model_full_names() -> Iterator[AvailableModelFullName]:
+def iter_pydantic_ai_model_full_names() -> Iterator[AvailableModelFullName]:
     """Iterate over all available models from pydantic-ai's known models."""
     yield from get_literal_type_args(_KnownModelName)
 
-
-AVAILABLE_MODELS = frozenset(_iter_available_models())
-"""Frozen set of all available and valid AI models."""
-AVAILABLE_MODEL_FULL_NAMES = frozenset(model.full_name for model in AVAILABLE_MODELS)
-"""Frozen set of all available and valid AI model full names."""
 
 if __name__ == "__main__":
     from rich import print
     from rich.pretty import pprint
 
-    print("Available models:")
-    pprint(sorted(AVAILABLE_MODEL_FULL_NAMES))
+    print("All models from Pydantic AI:")
+    pprint(sorted(iter_pydantic_ai_model_full_names()))
     print()
-    print("Models defined in Pydantic AI but missing in Brag AI:")
-    pydantic_ai_model_full_names = frozenset(
-        model_name
-        for model_name in _iter_pydantic_ai_model_full_names()
-        # Only consider models with a provider name
-        if ":" in model_name
-    )
-    pprint(sorted(pydantic_ai_model_full_names - AVAILABLE_MODEL_FULL_NAMES))
+    print("Models with known context window sizes:")
+    pprint(sorted(CONTEXT_WINDOW_SIZES.keys()))
