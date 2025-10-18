@@ -21,11 +21,12 @@ from brag import __version__
 from brag.agents import generate_brag_document
 from brag.batching import batch_chunks_by_token_limit
 from brag.models import (
-    AVAILABLE_MODEL_FULL_NAMES,
-    AVAILABLE_MODELS,
+    CONTEXT_WINDOW_SIZES,
     REQUIRED_API_KEY_ENV_VARS,
     AvailableModelFullName,
     Model,
+    TokenCount,
+    iter_pydantic_ai_model_full_names,
 )
 from brag.progress import track_iterable_progress
 from brag.repository import GitHubRepoURL, RepoFullName, RepoReference
@@ -176,16 +177,28 @@ async def from_repo(  # noqa: PLR0912 # Ignore this for now - we need to refacto
             group=model_group,
         ),
     ] = "english",
-    buffer_percentage: Annotated[
+    buffer_ratio: Annotated[
         float,
         cyclopts.Parameter(
             help=(
-                "The percentage of the model's context window to reserve as a buffer when batching commits."
+                "A ratio (0.0 to 1.0) of the context window to reserve as buffer when batching commits."
                 " Higher values (e.g., 0.3) are more conservative, while lower values (e.g., 0.1) allow for more chunks per batch but increase the risk of accidentally exceeding the limit."
             ),
             group=model_group,
+            validator=cyclopts.validators.Number(gte=0.0, lte=1.0),
         ),
     ] = 0.2,
+    context_window_size: Annotated[
+        int | None,
+        cyclopts.Parameter(
+            help=(
+                "The context window size for the model in tokens. "
+                "If not provided and the model has a known context window size, that will be used. "
+                "If not provided and the model has no known context window size, an error will be raised."
+            ),
+            group=model_group,
+        ),
+    ] = None,
 ) -> None:
     """Generate a brag document from a GitHub repository.
 
@@ -213,13 +226,10 @@ async def from_repo(  # noqa: PLR0912 # Ignore this for now - we need to refacto
     if not author and not github_api_token:
         raise ValueError("Either `user` or `github_api_token` must be provided")
 
-    if model_name not in AVAILABLE_MODEL_FULL_NAMES:
-        raise ValueError(
-            f"Model `{model_name}` is not available. See `brag list-models` for the list of available models."
-        )
-
+    # Resolve inputs
     model = Model.from_full_name(model_name)
-
+    context_window_size = _resolve_context_window_size(context_window_size, model)
+    max_tokens_per_batch = int(context_window_size * (1 - buffer_ratio))
     from_date = _maybe_parse_datetime(from_date_str)
     to_date = _maybe_parse_datetime(to_date_str)
 
@@ -230,11 +240,13 @@ async def from_repo(  # noqa: PLR0912 # Ignore this for now - we need to refacto
         )
 
     logger.info(
-        "Generating brag document from {repo} for {author}{from_date}{to_date}",
+        "Generating brag document from {repo} for {author}{from_date}{to_date} using {model} with {context_window_size} tokens",
         repo=repo_full_name,
         author=author,
         from_date=f" from {from_date}" if from_date else "",
         to_date=f" to {to_date}" if to_date else "",
+        model=model.full_name,
+        context_window_size=context_window_size,
     )
 
     # Parse the repo reference based on the input format
@@ -277,8 +289,7 @@ async def from_repo(  # noqa: PLR0912 # Ignore this for now - we need to refacto
                     github_commits,
                     description="Batching commits",
                 ),
-                model,
-                buffer_ratio=buffer_percentage,
+                max_tokens_per_batch=max_tokens_per_batch,
                 joiner=COMMIT_BATCH_JOINER,
             )
         )
@@ -438,16 +449,28 @@ async def from_local(
             group=model_group,
         ),
     ] = "english",
-    buffer_percentage: Annotated[
+    buffer_ratio: Annotated[
         float,
         cyclopts.Parameter(
             help=(
-                "The percentage of the model's context window to reserve as a buffer when batching commits."
+                "A ratio (0.0 to 1.0) of the context window to reserve as buffer when batching commits."
                 " Higher values (e.g., 0.3) are more conservative, while lower values (e.g., 0.1) allow for more chunks per batch but increase the risk of accidentally exceeding the limit."
             ),
             group=model_group,
+            validator=cyclopts.validators.Number(gte=0.0, lte=1.0),
         ),
     ] = 0.2,
+    context_window_size: Annotated[
+        int | None,
+        cyclopts.Parameter(
+            help=(
+                "The context window size for the model in tokens. "
+                "If not provided and the model has a known context window size, that will be used. "
+                "If not provided and the model has no known context window size, an error will be raised."
+            ),
+            group=model_group,
+        ),
+    ] = None,
 ) -> None:
     """Generate a brag document from a local Git repository.
 
@@ -482,15 +505,11 @@ async def from_local(
             f"Output file `{output}` already exists. Use `--on-existing-output overwrite` to overwrite."
         )
 
-    if model_name not in AVAILABLE_MODEL_FULL_NAMES:
-        raise ValueError(
-            f"Model `{model_name}` is not available. See `brag list-models` for the list of available models."
-        )
-
+    # Resolve inputs
     repo = repo.resolve()
-
     model = Model.from_full_name(model_name)
-
+    context_window_size = _resolve_context_window_size(context_window_size, model)
+    max_tokens_per_batch = int(context_window_size * (1 - buffer_ratio))
     from_date = _maybe_parse_datetime(from_date_str)
     to_date = _maybe_parse_datetime(to_date_str)
 
@@ -501,11 +520,13 @@ async def from_local(
         )
 
     logger.info(
-        "Generating brag document from {repo} for {author}{from_date}{to_date}",
+        "Generating brag document from {repo} for {author}{from_date}{to_date} using {model} with {context_window_size} tokens",
         repo=repo,
         author=author,
         from_date=f" from {from_date}" if from_date else "",
         to_date=f" to {to_date}" if to_date else "",
+        model=model.full_name,
+        context_window_size=context_window_size,
     )
 
     git_commits: DataSource[GitCommit] = GitCommitsSource(
@@ -537,8 +558,7 @@ async def from_local(
                 git_commits,
                 description="Batching commits",
             ),
-            model,
-            buffer_ratio=buffer_percentage,
+            max_tokens_per_batch=max_tokens_per_batch,
             joiner=COMMIT_BATCH_JOINER,
         )
     )
@@ -606,41 +626,114 @@ def list_models(
         ),
     ] = "text",
 ) -> None:
-    """List all available models."""
-    all_models = tuple(
-        sorted(
-            AVAILABLE_MODELS,
-            key=lambda model: model.full_name,
+    """List all available models from pydantic-ai with context window information."""
+    all_model_names = sorted(iter_pydantic_ai_model_full_names())
+
+    # Create model data with context window info
+    model_data = []
+    for model_name in all_model_names:
+        # Try to parse provider:name format
+        if ":" in model_name:
+            provider, name = model_name.split(":", 1)
+        else:
+            provider = ""
+            name = model_name
+
+        context_window_size = CONTEXT_WINDOW_SIZES.get(model_name)
+        api_key_env_var = REQUIRED_API_KEY_ENV_VARS.get(provider, "")
+
+        model_data.append(
+            {
+                "provider": provider,
+                "name": name,
+                "full_name": model_name,
+                "api_key_env_var": api_key_env_var,
+                "context_window_size": context_window_size,
+            }
         )
-    )
 
     match format:
         case "text":
-            grouped_models = groupby(all_models, key=lambda model: model.provider)
+            # Group by provider
+            grouped_models = groupby(model_data, key=lambda model: model["provider"])
             for provider, models in grouped_models:
-                api_key_env_var = REQUIRED_API_KEY_ENV_VARS[provider]
-                print(f"{provider}:")
-                print(f"  API key environment variable: {api_key_env_var}")
-                print("  Models:")
-                for model in models:
-                    print(f"    {model.name}")
+                models_list = list(models)
+                if provider:
+                    api_key_env_var = REQUIRED_API_KEY_ENV_VARS.get(provider, "")
+                    print(f"{provider}:")
+                    if api_key_env_var:
+                        print(f"  API key environment variable: {api_key_env_var}")
+                    print("  Models:")
+                    for model in models_list:
+                        context_info = (
+                            f" ({model['context_window_size']:,} tokens)"
+                            if model["context_window_size"] is not None
+                            else " (Unknown - use --context-window-size)"
+                        )
+                        print(f"    {model['name']}{context_info}")
+                else:
+                    print("Other models:")
+                    for model in models_list:
+                        context_info = (
+                            f" ({model['context_window_size']:,} tokens)"
+                            if model["context_window_size"] is not None
+                            else " (Unknown - use --context-window-size)"
+                        )
+                        print(f"    {model['full_name']}{context_info}")
         case "json":
-            print(
-                json.dumps(
-                    [
-                        {
-                            "provider": model.provider,
-                            "name": model.name,
-                            "full_name": model.full_name,
-                            "api_key_env_var": model.api_key_env_var,
-                        }
-                        for model in all_models
-                    ]
-                )
+            print(json.dumps(model_data, indent=2))
+
+
+def _resolve_context_window_size(
+    context_window_size: TokenCount | None,
+    model: Model,
+) -> TokenCount:
+    """Resolve the context window size for a model.
+
+    Args:
+        context_window_size: The context window size to use. If None, the default context window size for the model will be used.
+        model: The model to resolve the context window size for.
+
+    Returns:
+        The context window size to use.
+    """
+    model_context_window_size = model.get_default_context_window_size()
+    if context_window_size is not None:
+        if (
+            model_context_window_size is not None
+            and model_context_window_size != context_window_size
+        ):
+            logger.warning(
+                "Using provided context window size {user_size} for model {model_name}, which differs from built-in size {builtin_size}",
+                user_size=context_window_size,
+                model_name=model.full_name,
+                builtin_size=model_context_window_size,
             )
+        return context_window_size
+
+    if model_context_window_size is not None:
+        logger.info(
+            "Using built-in context window size {size} for model {model_name}",
+            size=model_context_window_size,
+            model_name=model.full_name,
+        )
+        return model_context_window_size
+
+    raise ValueError(
+        f"Model '{model.full_name}' does not have a known context window size. "
+        "Please specify --context-window-size when using this model."
+    )
 
 
 def _maybe_parse_datetime(date_str: str | None) -> datetime | None:
+    """Parse a date string into a datetime object.
+
+    Args:
+        date_str: The date string to parse. Supports natural language dates like '1 day ago', 'last week', '2024-01-01', 'yesterday', etc. If None, returns None.
+
+    Returns:
+        The datetime object, or None if the date string is None.
+    """
     if not date_str:
         return None
 
