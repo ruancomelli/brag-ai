@@ -23,6 +23,7 @@ classifiers = [
 requires-python = ">=3.12"
 dependencies = [
     "cyclopts>=3.9.2",
+    "dateparser>=1.2.2",
     "gitpython>=3.1.44",
     "loguru>=0.7.3",
     "pydantic>=2.10.6",
@@ -111,7 +112,7 @@ known_first_party = ["brag"]
 [dependency-groups]
 lint = ["ruff>=0.9.7"]
 format = ["ruff>=0.9.7"]
-type-check = ["mypy>=1.15.0"]
+type-check = ["mypy>=1.15.0", "types-dateparser>=1.2.2.20250809"]
 test = ["pytest>=8.3.4"]
 test-cov = ["pytest>=8.3.4", "pytest-cov>=6.0.0"]
 pre-commit = ["deptry>=0.23.0", "pre-commit>=4.1.0"]

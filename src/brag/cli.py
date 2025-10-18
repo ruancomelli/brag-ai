@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Annotated, Literal
 
 import cyclopts
+from dateparser import parse as parse_datetime
 from github import Github
 from github.Auth import Token
 from loguru import logger
@@ -74,19 +75,25 @@ async def from_repo(  # noqa: PLR0912 # Ignore this for now - we need to refacto
             group=inputs_group,
         ),
     ] = None,
-    from_date: Annotated[
-        datetime | None,
+    from_date_str: Annotated[
+        str | None,
         cyclopts.Parameter(
             name="--from",
-            help="The start date to generate the brag document for",
+            help=(
+                "The start date to generate the brag document for. "
+                "Supports natural language dates like `'1 day ago'`, `'last week'`, `'2024-01-01'`, etc."
+            ),
             group=inputs_group,
         ),
     ] = None,
-    to_date: Annotated[
-        datetime | None,
+    to_date_str: Annotated[
+        str | None,
         cyclopts.Parameter(
             name="--to",
-            help="The end date to generate the brag document for",
+            help=(
+                "The end date to generate the brag document for. "
+                "Supports natural language dates like `'yesterday'`, `'last month'`, `'2024-12-31'`, etc."
+            ),
             group=inputs_group,
         ),
     ] = None,
@@ -213,6 +220,15 @@ async def from_repo(  # noqa: PLR0912 # Ignore this for now - we need to refacto
 
     model = Model.from_full_name(model_name)
 
+    from_date = _maybe_parse_datetime(from_date_str)
+    to_date = _maybe_parse_datetime(to_date_str)
+
+    if from_date and to_date and from_date > to_date:
+        raise ValueError(
+            f"Invalid date range: `--from` ({from_date}) is later than `--to` ({to_date}). "
+            "Please check your input."
+        )
+
     logger.info(
         "Generating brag document from {repo} for {author}{from_date}{to_date}",
         repo=repo_full_name,
@@ -331,19 +347,25 @@ async def from_local(
             group=inputs_group,
         ),
     ],
-    from_date: Annotated[
-        datetime | None,
+    from_date_str: Annotated[
+        str | None,
         cyclopts.Parameter(
             name="--from",
-            help="The start date to generate the brag document for",
+            help=(
+                "The start date to generate the brag document for. "
+                "Supports natural language dates like `'1 day ago'`, `'last week'`, `'2024-01-01'`, etc."
+            ),
             group=inputs_group,
         ),
     ] = None,
-    to_date: Annotated[
-        datetime | None,
+    to_date_str: Annotated[
+        str | None,
         cyclopts.Parameter(
             name="--to",
-            help="The end date to generate the brag document for",
+            help=(
+                "The end date to generate the brag document for. "
+                "Supports natural language dates like `'yesterday'`, `'last month'`, `'2024-12-31'`, etc."
+            ),
             group=inputs_group,
         ),
     ] = None,
@@ -468,6 +490,15 @@ async def from_local(
     repo = repo.resolve()
 
     model = Model.from_full_name(model_name)
+
+    from_date = _maybe_parse_datetime(from_date_str)
+    to_date = _maybe_parse_datetime(to_date_str)
+
+    if from_date and to_date and from_date > to_date:
+        raise ValueError(
+            f"Invalid date range: `--from` ({from_date}) is later than `--to` ({to_date}). "
+            "Please check your input."
+        )
 
     logger.info(
         "Generating brag document from {repo} for {author}{from_date}{to_date}",
@@ -607,3 +638,24 @@ def list_models(
                     ]
                 )
             )
+
+
+def _maybe_parse_datetime(date_str: str | None) -> datetime | None:
+    if not date_str:
+        return None
+
+    try:
+        dt = parse_datetime(date_str)
+    except Exception as e:
+        raise ValueError(
+            f"Invalid date format: {date_str!r}. "
+            "Supported formats include: '1 day ago', 'last week', '2024-01-01', 'yesterday', etc."
+        ) from e
+
+    if not dt:
+        raise ValueError(
+            f"Could not parse date: {date_str!r}. "
+            "Supported formats include: '1 day ago', 'last week', '2024-01-01', 'yesterday', etc."
+        )
+
+    return dt
