@@ -47,8 +47,14 @@ from brag.batching import batch_chunks_by_token_limit
         pytest.param(
             ["chunk1", "", "chunk3", "", "chunk5"],
             10,
-            ["chunk1", "chunk3\n\n---\n\nchunk5"],
+            ["chunk1\n\n---\n\nchunk3", "chunk5"],
             id="some empty chunks",
+        ),
+        pytest.param(
+            ["", "", "chunk1", "", "", "chunk2", "", ""],
+            10,
+            ["chunk1", "chunk2"],
+            id="multiple consecutive empty chunks",
         ),
     ),
 )
@@ -69,14 +75,14 @@ def test_batch_chunks_by_token_limit_basic_cases(
             ["chunk1", "chunk2", "chunk3", "chunk4", "chunk5"],
             8,
             "|",
-            ["chunk1|chunk2", "chunk3|chunk4|chunk5"],
+            ["chunk1|chunk2|chunk3", "chunk4|chunk5"],
             id="small joiner",
         ),
         pytest.param(
             ["chunk1", "chunk2", "chunk3", "chunk4", "chunk5"],
             8,
             " <<JOINER>> ",
-            ["chunk1", "chunk2 <<JOINER>> chunk3", "chunk4 <<JOINER>> chunk5"],
+            ["chunk1 <<JOINER>> chunk2", "chunk3 <<JOINER>> chunk4", "chunk5"],
             id="large joiner",
         ),
         pytest.param(
@@ -97,3 +103,14 @@ def test_batch_chunks_by_token_limit_different_joiners(
     """Test batching with different joiners."""
     result = list(batch_chunks_by_token_limit(chunks, max_tokens, joiner=joiner))
     assert result == expected_batches
+
+
+@pytest.mark.parametrize("max_tokens", (0, -5))
+def test_batch_chunks_by_token_limit_max_tokens_must_be_positive(
+    max_tokens: int,
+) -> None:
+    """Test batching with zero max_tokens_per_batch raises ValueError."""
+    chunks = ["chunk1", "chunk2"]
+    joiner = "|"
+    with pytest.raises(ValueError, match="max_tokens_per_batch must be positive"):
+        list(batch_chunks_by_token_limit(chunks, max_tokens, joiner=joiner))

@@ -22,8 +22,7 @@ def batch_chunks_by_token_limit(
     token estimation to determine how many chunks can be combined safely.
 
     Chunks are combined with a joiner (defined by the `joiner` parameter) to help
-    the model distinguish between different chunks in the same batch. The joiner is
-    surrounded by double newlines for better visual separation.
+    distinguish between different chunks in the same batch.
 
     This batching optimizes API usage by reducing the number of calls to the LLM provider,
     which can help avoid rate limiting errors for repositories with many commits or
@@ -31,7 +30,7 @@ def batch_chunks_by_token_limit(
 
     The size of each chunk is overestimated to be conservative, that is, to ensure that the chunk
     will fit within the max tokens per batch. The size of each batch is estimated by summing the
-    sizes of its chunks, which is also an approximation.
+    sizes of its chunks plus the joiner tokens, which is also an approximation.
 
     Args:
         chunks: An iterable of strings, where each string is a chunk of text.
@@ -40,7 +39,13 @@ def batch_chunks_by_token_limit(
 
     Yields:
         Batches of text chunks, each fitting within the max tokens per batch.
+
+    Raises:
+        ValueError: If max_tokens_per_batch is not positive.
     """
+    if max_tokens_per_batch <= 0:
+        raise ValueError("max_tokens_per_batch must be positive")
+
     joiner_token_count = estimate_token_count(joiner, approximation_mode="overestimate")
     current_batch: str = ""
     current_batch_token_count = 0
@@ -52,9 +57,12 @@ def batch_chunks_by_token_limit(
             chunk, approximation_mode="overestimate"
         )
 
+        # Only add joiner_token_count if current_batch is not empty
+        additional_token_count = joiner_token_count if current_batch else 0
+
         # If adding this chunk would exceed the limit, yield the current batch and start a new one
         if current_batch and (
-            current_batch_token_count + joiner_token_count + chunk_token_count
+            current_batch_token_count + additional_token_count + chunk_token_count
             > max_tokens_per_batch
         ):
             yield current_batch
@@ -62,7 +70,7 @@ def batch_chunks_by_token_limit(
             current_batch_token_count = chunk_token_count
         else:
             current_batch = promptify(current_batch, chunk, joiner=joiner)
-            current_batch_token_count += joiner_token_count + chunk_token_count
+            current_batch_token_count += additional_token_count + chunk_token_count
 
     # Add the last batch if it's not empty
     if current_batch:
