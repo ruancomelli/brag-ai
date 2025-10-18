@@ -223,6 +223,12 @@ async def from_repo(  # noqa: PLR0912 # Ignore this for now - we need to refacto
     from_date = _maybe_parse_datetime(from_date_str)
     to_date = _maybe_parse_datetime(to_date_str)
 
+    if from_date and to_date and from_date > to_date:
+        raise ValueError(
+            f"Invalid date range: `--from` ({from_date}) is later than `--to` ({to_date}). "
+            "Please check your input."
+        )
+
     logger.info(
         "Generating brag document from {repo} for {author}{from_date}{to_date}",
         repo=repo_full_name,
@@ -487,6 +493,12 @@ async def from_local(
 
     from_date = _maybe_parse_datetime(from_date_str)
     to_date = _maybe_parse_datetime(to_date_str)
+
+    if from_date and to_date and from_date > to_date:
+        raise ValueError(
+            f"Invalid date range: `--from` ({from_date}) is later than `--to` ({to_date}). "
+            "Please check your input."
+        )
 
     logger.info(
         "Generating brag document from {repo} for {author}{from_date}{to_date}",
