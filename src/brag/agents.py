@@ -115,7 +115,7 @@ async def _generate_initial_brag_document(
     """
     prompt = _generate_initial_brag_document_prompt(chunk)
     result = await agent.run(prompt)
-    return result.data
+    return result.output
 
 
 def _generate_initial_brag_document_prompt(chunk: str) -> str:
@@ -164,7 +164,7 @@ async def _update_brag_document(
     """
     prompt = _generate_update_brag_document_prompt(current_brag_document, new_context)
     result = await agent.run(prompt)
-    return result.data
+    return result.output
 
 
 def _generate_update_brag_document_prompt(
