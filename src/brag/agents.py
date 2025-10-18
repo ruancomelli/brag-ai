@@ -40,7 +40,7 @@ async def generate_brag_document(
         chunks: An iterable of strings, where each string is a chunk of text
             representing a contribution or achievement. This is expected to contain at
             least one chunk.
-        language: The language in which to generate the brag document.
+        language: The human language in which to generate the brag document.
         input_brag_document: An optional existing brag document to update with new
             contributions. If provided, the function will update this document.
             Otherwise, a new document will be generated from scratch.
