@@ -1,3 +1,3 @@
 #!/bin/bash
 
-uv run --group pre-commit pre-commit run --all-files --show-diff-on-failure
+uv run --group pre-commit prek run --all-files --show-diff-on-failure

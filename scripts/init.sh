@@ -1,4 +1,4 @@
 #!/bin/bash
 
 uv sync --all-groups
-uv run --group pre-commit pre-commit install
+uv run --group pre-commit prek install --install-hooks
