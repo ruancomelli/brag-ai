@@ -271,6 +271,9 @@ async def from_repo(  # noqa: PLR0912 # Ignore this for now - we need to refacto
 
         commits_count = len(github_commits)
 
+        if not commits_count:
+            raise ValueError("No commits found for the given repository and date range")
+
         logger.info(
             "Processing {commits} for {author} in {repo}",
             commits=(
@@ -539,6 +542,9 @@ async def from_local(
         git_commits = git_commits.limit(limit)
 
     commits_count = len(git_commits)
+
+    if not commits_count:
+        raise ValueError("No commits found for the given repository and date range")
 
     logger.info(
         "Processing {commits} for {author} in {repo}",
