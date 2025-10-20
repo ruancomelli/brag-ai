@@ -14,19 +14,11 @@ from pydantic_ai.models import KnownModelName as _KnownModelName
 
 # type AvailableModelFullName = _KnownModelName
 type AvailableModelFullName = str
-# type ProviderName = Literal[
-#     "openai",
-#     "anthropic",
-#     "cohere",
-#     "google-gla",
-#     "groq",
-#     "mistral",
-# ]
 type ProviderName = str
 type ModelName = str
 type TokenCount = int
 
-CONTEXT_WINDOW_SIZES: Final[dict[AvailableModelFullName, TokenCount]] = {
+KNOWN_CONTEXT_WINDOW_SIZES: Final[dict[AvailableModelFullName, TokenCount]] = {
     # ==========================================================
     # OpenAI
     # https://platform.openai.com/docs/models
@@ -131,13 +123,13 @@ CONTEXT_WINDOW_SIZES: Final[dict[AvailableModelFullName, TokenCount]] = {
     "mistral:mistral-small-latest": 32_000,
 }
 
-REQUIRED_API_KEY_ENV_VARS: Final[dict[ProviderName, str]] = {
-    "openai": "OPENAI_API_KEY",
-    "anthropic": "ANTHROPIC_API_KEY",
-    "cohere": "COHERE_API_KEY",
-    "google-gla": "GOOGLE_API_KEY",
-    "groq": "GROQ_API_KEY",
-    "mistral": "MISTRAL_API_KEY",
+KNOWN_REQUIRED_ENV_VARS: Final[dict[ProviderName, tuple[str, ...]]] = {
+    "openai": ("OPENAI_API_KEY",),
+    "anthropic": ("ANTHROPIC_API_KEY",),
+    "cohere": ("COHERE_API_KEY",),
+    "google-gla": ("GOOGLE_API_KEY",),
+    "groq": ("GROQ_API_KEY",),
+    "mistral": ("MISTRAL_API_KEY",),
 }
 
 
@@ -176,12 +168,12 @@ class Model(BaseModel):
         Returns:
             The default context window size for the model, or None if not found.
         """
-        return CONTEXT_WINDOW_SIZES.get(self.full_name)
+        return KNOWN_CONTEXT_WINDOW_SIZES.get(self.full_name)
 
 
 def iter_pydantic_ai_model_full_names() -> Iterator[AvailableModelFullName]:
     """Iterate over all available models from pydantic-ai's known models."""
-    yield from get_literal_type_args(_KnownModelName)
+    yield from get_literal_type_args(_KnownModelName.__value__)
 
 
 if __name__ == "__main__":
@@ -192,4 +184,7 @@ if __name__ == "__main__":
     pprint(sorted(iter_pydantic_ai_model_full_names()))
     print()
     print("Models with known context window sizes:")
-    pprint(sorted(CONTEXT_WINDOW_SIZES.keys()))
+    pprint(KNOWN_CONTEXT_WINDOW_SIZES)
+    print()
+    print("Models with known required environment variables:")
+    pprint(KNOWN_REQUIRED_ENV_VARS)

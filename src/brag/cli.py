@@ -6,7 +6,6 @@ from their GitHub contributions.
 
 import json
 from datetime import datetime
-from itertools import groupby
 from pathlib import Path
 from typing import Annotated, Literal
 
@@ -16,13 +15,14 @@ from github import Github
 from github.Auth import Token
 from loguru import logger
 from rich.console import Console
+from rich.table import Table
 
 from brag import __version__
 from brag.agents import generate_brag_document
 from brag.batching import batch_chunks_by_token_limit
 from brag.models import (
-    CONTEXT_WINDOW_SIZES,
-    REQUIRED_API_KEY_ENV_VARS,
+    KNOWN_CONTEXT_WINDOW_SIZES,
+    KNOWN_REQUIRED_ENV_VARS,
     AvailableModelFullName,
     Model,
     TokenCount,
@@ -642,50 +642,60 @@ def list_models(
         if ":" in model_name:
             provider, name = model_name.split(":", 1)
         else:
-            provider = ""
+            provider = None
             name = model_name
 
-        context_window_size = CONTEXT_WINDOW_SIZES.get(model_name)
-        api_key_env_var = REQUIRED_API_KEY_ENV_VARS.get(provider, "")
+        context_window_size = KNOWN_CONTEXT_WINDOW_SIZES.get(model_name)
+        required_env_vars = KNOWN_REQUIRED_ENV_VARS.get(provider) if provider else None
 
         model_data.append(
             {
                 "provider": provider,
                 "name": name,
                 "full_name": model_name,
-                "api_key_env_var": api_key_env_var,
+                "required_env_vars": required_env_vars,
                 "context_window_size": context_window_size,
             }
         )
 
     match format:
         case "text":
-            # Group by provider
-            grouped_models = groupby(model_data, key=lambda model: model["provider"])
-            for provider, models in grouped_models:
-                models_list = list(models)
-                if provider:
-                    api_key_env_var = REQUIRED_API_KEY_ENV_VARS.get(provider, "")
-                    print(f"{provider}:")
-                    if api_key_env_var:
-                        print(f"  API key environment variable: {api_key_env_var}")
-                    print("  Models:")
-                    for model in models_list:
-                        context_info = (
-                            f" ({model['context_window_size']:,} tokens)"
-                            if model["context_window_size"] is not None
-                            else " (Unknown - use --context-window-size)"
-                        )
-                        print(f"    {model['name']}{context_info}")
+            # Create a Rich table for better formatting
+            console = Console()
+            table = Table(title="Available Models")
+
+            # Add columns
+            table.add_column("Full Name", style="cyan", no_wrap=False)
+            table.add_column("Provider", style="magenta")
+            table.add_column("Name", style="green")
+            table.add_column("Required Env Vars", style="yellow")
+            table.add_column("Context Window Size", style="blue", justify="right")
+
+            # Add rows
+            for model in model_data:
+                # Format required environment variables
+
+                env_vars = model["required_env_vars"]
+                if env_vars is not None:
+                    env_vars_str = ", ".join(env_vars)  # type: ignore
                 else:
-                    print("Other models:")
-                    for model in models_list:
-                        context_info = (
-                            f" ({model['context_window_size']:,} tokens)"
-                            if model["context_window_size"] is not None
-                            else " (Unknown - use --context-window-size)"
-                        )
-                        print(f"    {model['full_name']}{context_info}")
+                    env_vars_str = "?"
+
+                # Format context window size
+                context_size = model["context_window_size"]
+                context_size_str = (
+                    f"{context_size:_}" if context_size is not None else "?"
+                )
+
+                table.add_row(
+                    str(model["full_name"]),
+                    str(model["provider"] or "?"),
+                    str(model["name"]),
+                    env_vars_str,
+                    context_size_str,
+                )
+
+            console.print(table)
         case "json":
             print(json.dumps(model_data, indent=2))
 
