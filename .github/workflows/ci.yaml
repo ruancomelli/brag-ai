@@ -29,7 +29,7 @@ jobs:
     name: Python ${{ matrix.check.name }}
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         persist-credentials: false
 
@@ -55,7 +55,7 @@ jobs:
     name: Python ${{ matrix.python-version }} test on ${{ matrix.runner }}
     runs-on: ${{ matrix.runner }}
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         persist-credentials: false
 
@@ -80,7 +80,7 @@ jobs:
     name: Shellcheck
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         persist-credentials: false
     - name: Run ShellCheck
