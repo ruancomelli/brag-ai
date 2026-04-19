@@ -28,7 +28,7 @@ jobs:
         fetch-depth: 0
         persist-credentials: false
     - name: Setup UV
-      uses: astral-sh/setup-uv@v7
+      uses: astral-sh/setup-uv@v8
       with:
         enable-cache: true
     - name: Install Project Dependencies
